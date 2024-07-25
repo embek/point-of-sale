@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>POS - Goods</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <!-- Custom styles for this template-->
+    <link href="/stylesheets/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <%- include('../partials/sidebar') %>
+
+            <!-- Content Wrapper -->
+            <div id="content-wrapper" class="d-flex flex-column">
+
+                <!-- Main Content -->
+                <div id="content">
+
+                    <%- include('../partials/topbar') %>
+
+                        <!-- Begin Page Content -->
+                        <div class="container-fluid">
+
+                            <!-- Page Heading -->
+                            <div class="d-sm-flex align-items-center justify-content-between mb-0">
+                                <h1 class="h3 mb-0 text-gray-800">Goods</h1>
+                            </div>
+
+
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h6 class="m-0 font-weight-bold text-primary">Form Add</h6>
+                                </div>
+                                <div class="card-body">
+                                    <form class="user" method="post" enctype="multipart/form-data">
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label" for="inputBarcode">Barcode</label>
+                                            <input required autocomplete="off" type="text" name="barcode"
+                                                class="form-control col-sm-10" id="inputBarcode"
+                                                placeholder="Input Barcode">
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label" for="inputName">Name</label>
+                                            <input required autocomplete="off" type="text" name="name"
+                                                class="form-control col-sm-10" id="inputName" placeholder="Input Name">
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label" for="inputStock">Stock</label>
+                                            <input required autocomplete="off" type="number" name="stock"
+                                                class="form-control col-sm-10" id="inputStock"
+                                                placeholder="Input Stock">
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label" for="inputPurchasePrice">Purchase
+                                                Price</label>
+                                            <input required autocomplete="off" type="number" name="purchaseprice"
+                                                class="form-control col-sm-10" id="inputPurchasePrice"
+                                                placeholder="Input Purchase Price">
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label" for="inputSellingPrice">Selling
+                                                Price</label>
+                                            <input required autocomplete="off" type="number" name="sellingprice"
+                                                class="form-control col-sm-10" id="inputSellingPrice"
+                                                placeholder="Input Selling Price">
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label" for="inputUnit">Unit</label>
+                                            <select required class="form-control col-sm-10" id="inputUnit" name="unit"
+                                                aria-label="Default select example">
+                                                <%units.forEach(item=>{%>
+                                                    <option value="<%=item%>"><%=item%></option>
+                                                <%})%>
+                                            </select>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label" for="inputPicture">Picture</label>
+                                            <div class="input-group col p-0">
+                                                <label id="choose" class="col form-control" for="inputPicture">Choose
+                                                    file</label>
+                                                <div class="input-group-append">
+                                                    <label for="inputPicture" class="input-group-text"
+                                                        id="basic-addon2">browse</label>
+                                                </div>
+                                            </div>
+                                            <input required hidden type="file" accept="image/*" name="picture"
+                                                class="form col-sm-10" id="inputPicture" placeholder="Input Picture"
+                                                oninput="pic.src=window.URL.createObjectURL(this.files[0]);document.getElementById('choose').innerHTML=this.files[0].name">
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label">Preview</label>
+                                            <div class="col-sm-10">
+                                                <img style="width: 75%;" id="pic">
+                                            </div>
+                                        </div>
+                                        <button hidden id="submitAdd" type="submit"></button>
+                                    </form>
+                                </div>
+                                <div class="card-footer">
+                                    <label for="submitAdd" class="btn btn-success btn-icon-split mb-0">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-database"></i>
+                                        </span>
+                                        <span class="text">Save</span>
+                                    </label>
+                                    <a href="/goods" class="btn btn-warning btn-icon-split">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-rotate-left"></i>
+                                        </span>
+                                        <span class="text">back</span>
+                                    </a>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                        <!-- /.container-fluid -->
+
+                </div>
+                <!-- End of Main Content -->
+
+                <%- include('../partials/footer') %>
+
+            </div>
+            <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="/vendor/jquery/jquery.min.js"></script>
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="/javascripts/sb-admin-2.min.js"></script>
+    <script>
+        //  data.picture?`src=images/${data.picture}`:''
+
+    </script>
+
+</body>
+
+</html>
