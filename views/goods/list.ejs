@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>POS - Units</title>
+    <title>POS - Goods</title>
 
     <!-- Custom fonts for this template-->
     <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -42,13 +42,13 @@
 
                             <!-- Page Heading -->
                             <div class="mb-4 align-items-center mb-4">
-                                <h1 class="h3 mb-0 text-gray-800">Units</h1>
-                                <p>This is data of units</p>
+                                <h1 class="h3 mb-0 text-gray-800">Goods</h1>
+                                <p>This is data of goods</p>
                             </div>
 
                             <div class="card mb-4">
                                 <div class="card-header">
-                                    <a href="/units/add" class="btn btn-primary btn-icon-split">
+                                    <a href="/goods/add" class="btn btn-primary btn-icon-split">
                                         <span class="icon text-white-50">
                                             <i class="fas fa-plus"></i>
                                         </span>
@@ -59,17 +59,25 @@
                                     <table class="table responsive nowrap" id="tabel">
                                         <thead>
                                             <tr>
-                                                <th scope="col">Unit</th>
+                                                <th scope="col">Barcode</th>
                                                 <th scope="col">Name</th>
-                                                <th scope="col">Note</th>
+                                                <th scope="col">Stock</th>
+                                                <th scope="col">Unit</th>
+                                                <th scope="col">Purchase Price</th>
+                                                <th scope="col">Selling Price </th>
+                                                <th scope="col">Picture</th>
                                                 <th scope="col">Action</th>
                                             </tr>
                                         </thead>
                                         <tfoot>
                                             <tr>
-                                                <th scope="col">Unit</th>
+                                                <th scope="col">Barcode</th>
                                                 <th scope="col">Name</th>
-                                                <th scope="col">Note</th>
+                                                <th scope="col">Stock</th>
+                                                <th scope="col">Unit</th>
+                                                <th scope="col">Purchase Price</th>
+                                                <th scope="col">Selling Price </th>
+                                                <th scope="col">Picture</th>
                                                 <th scope="col">Action</th>
                                             </tr>
                                         </tfoot>
@@ -97,28 +105,6 @@
         <i class="fas fa-angle-up"></i>
     </a>
 
-    <!-- Delete Modal-->
-    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Delete Confirmation</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div id="modalBody" class="modal-body">
-                    Are you sure you want to delete this item?
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">No</button>
-                    <a id="delete" class="btn btn-primary">Yes</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Bootstrap core JavaScript-->
     <script src="/vendor/jquery/jquery.min.js"></script>
     <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -135,9 +121,9 @@
 
 
     <script>
-        function ubahDelete(unit) {
+        function ubahDelete(barcode) {
             $('#modalBody').html(`<p>Are you sure you want to delete this item?</p>`);
-            $("#delete").attr("href", `/units/delete/${unit}`);
+            $("#delete").attr("href", `/goods/delete/${barcode}`);
         }
 
         function loadTabel() {
@@ -146,11 +132,15 @@
                 lengthMenu: [[3, 10, 100], [3, 10, 100]],
                 processing: true,
                 serverSide: true,
-                ajax: "/units/data",
+                ajax: "/goods/data",
                 columns: [
-                    { data: "unit" },
+                    { data: "barcode" },
                     { data: "name" },
-                    { data: "note" },
+                    { data: "stock", searchable: false },
+                    { data: "unit", searchable: false },
+                    { data: "purchaseprice", searchable: false },
+                    { data: "sellingprice", searchable: false },
+                    { data: "picture", searchable: false, orderable: false },
                     { data: "action", searchable: false, orderable: false }
                 ]
             })

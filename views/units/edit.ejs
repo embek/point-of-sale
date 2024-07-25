@@ -65,9 +65,9 @@
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label" for="inputNote">Note</label>
-                                            <input style="resize: vertical !important;" autocomplete="off" type="text" name="note"
-                                                class="form-control col-sm-10" id="inputNote" value="<%=data.note%>"
-                                                placeholder="Input Note">
+                                            <textarea name="note"
+                                                class="form-control col-sm-10" id="inputNote"
+                                                placeholder="Input Note"><%=data.note%></textarea>
                                         </div>
                                         <button hidden id="submitAdd" type="submit"></button>
                                     </form>
