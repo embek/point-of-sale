@@ -3,11 +3,11 @@ var router = express.Router();
 const Unit = require('../models/Unit');
 
 router.get('/', (req, res) => {
-    res.render('units/list', { name: req.session.userid.name });
+    res.render('units/list', { operator: req.session.userid.name });
 })
 
 router.get('/add', (req, res) => {
-    res.render('units/add', { name: req.session.userid.name });
+    res.render('units/add', { operator: req.session.userid.name });
 })
 
 router.post('/add', async (req, res) => {
@@ -23,7 +23,7 @@ router.post('/add', async (req, res) => {
 router.get('/edit/:unit', async (req, res) => {
     try {
         const data = await Unit.cek(req.params.unit);
-        res.render('units/edit', { name: req.session.userid.name, data });
+        res.render('units/edit', { operator: req.session.userid.name, data });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: error.message });

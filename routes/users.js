@@ -6,11 +6,11 @@ const saltRounds = 10;
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
-  res.render('users/list', { name: req.session.userid.name });
+  res.render('users/list', { operator: req.session.userid.name });
 });
 
 router.get('/add', (req, res) => {
-  res.render('users/add', { name: req.session.userid.name })
+  res.render('users/add', { operator: req.session.userid.name })
 })
 
 router.post('/add', async (req, res) => {
@@ -30,7 +30,7 @@ router.post('/add', async (req, res) => {
 router.get('/edit/:id', async (req, res) => {
   try {
     const data = await User.cek('userid',req.params.id);
-    res.render('users/edit', { name: req.session.userid.name, data })
+    res.render('users/edit', { operator: req.session.userid.name, data })
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
