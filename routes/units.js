@@ -32,8 +32,7 @@ router.get('/edit/:unit', async (req, res) => {
 })
 
 router.post('/edit/:unit', async (req, res) => {
-    try {///unitnya ganti ,jadi pake property unit lama dalam objectData
-        console.log(req.body);
+    try {///PK unitnya bisa ganti ,jadi pake property unit lama dalam objectData
         await Unit.edit({ lama: req.params.unit, ...req.body });
         res.redirect('/units');
     } catch (error) {
