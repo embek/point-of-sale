@@ -44,8 +44,7 @@ class Supplier {
             if (limit != -1) sql += ` LIMIT ${limit} OFFSET ${offset}`;
             const result = await db.query(sql);
             result.rows.forEach(data => {
-                data.action = ` <a class="btn btn-success btn-circle" href="/suppliers/edit/${data.supplierid}"><i class="fas fa-info-circle"></i></a>
-                                <a class="btn btn-danger btn-circle" data-toggle="modal" data-target="#deleteModal" onclick="ubahDelete(${data.supplierid})"><i class="fas fa-trash"></i></a>`;
+                data.action = ` <a class="btn btn-success btn-circle" href="/suppliers/edit/${data.supplierid}"><i class="fas fa-info-circle"></i></a> <a class="btn btn-danger btn-circle" data-toggle="modal" data-target="#deleteModal" onclick="ubahDelete(${data.supplierid})"><i class="fas fa-trash"></i></a>`;
             })
             const response = {
                 "recordsTotal": total.rows[0].total,

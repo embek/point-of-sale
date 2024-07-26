@@ -47,7 +47,7 @@ router.get('/delete/:supplierid', async (req, res) => {
 
 router.get('/data', async (req, res) => {
     try {
-        const response = Supplier.list(req.query);
+        const response = await Supplier.list(req.query);
         res.status(200).json(response);
     } catch (error) {
         console.log(error);
