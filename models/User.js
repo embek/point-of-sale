@@ -65,18 +65,6 @@ class User {
             console.log(err, 'gagal hapus users');
         }
     }
-
-    // static editAvatar(userid, avatar, callback) {
-    //     try {
-    //         let sql = `UPDATE users SET avatar = $1 WHERE userid = $2`;
-    //         db.query(sql, [avatar, userid], (err) => {
-    //             if (err) throw err;
-    //             callback();
-    //         })
-    //     } catch (err) {
-    //         console.log(err, 'gagal edit avatar');
-    //     }
-    // }
 }
 
 module.exports = User;
