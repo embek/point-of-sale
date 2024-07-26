@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>POS - Suppliers</title>
+    <title>POS - Purchases</title>
 
     <!-- Custom fonts for this template-->
     <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -42,13 +42,13 @@
 
                             <!-- Page Heading -->
                             <div class="mb-4 align-items-center mb-4">
-                                <h1 class="h3 mb-0 text-gray-800">Suppliers</h1>
-                                <p>This is data of suppliers</p>
+                                <h1 class="h3 mb-0 text-gray-800">Purchases</h1>
+                                <p>This is data of purchases</p>
                             </div>
 
                             <div class="card mb-4">
                                 <div class="card-header">
-                                    <a href="/suppliers/add" class="btn btn-primary btn-icon-split">
+                                    <a href="/purchases/add" class="btn btn-primary btn-icon-split">
                                         <span class="icon text-white-50">
                                             <i class="fas fa-plus"></i>
                                         </span>
@@ -59,19 +59,19 @@
                                     <table class="table responsive nowrap" id="tabel">
                                         <thead>
                                             <tr>
-                                                <th scope="col">Supplier ID</th>
-                                                <th scope="col">Name</th>
-                                                <th scope="col">Address</th>
-                                                <th scope="col">Phone</th>
+                                                <th scope="col">Invoice</th>
+                                                <th scope="col">Time</th>
+                                                <th scope="col">Total Summary</th>
+                                                <th scope="col">Supplier</th>
                                                 <th scope="col">Action</th>
                                             </tr>
                                         </thead>
                                         <tfoot>
                                             <tr>
-                                                <th scope="col">Supplier ID</th>
-                                                <th scope="col">Name</th>
-                                                <th scope="col">Address</th>
-                                                <th scope="col">Phone</th>
+                                                <th scope="col">Invoice/th>
+                                                <th scope="col">Time</th>
+                                                <th scope="col">Total Summary</th>
+                                                <th scope="col">Supplier</th>
                                                 <th scope="col">Action</th>
                                             </tr>
                                         </tfoot>
@@ -115,9 +115,9 @@
 
 
     <script>
-        function ubahDelete(supplierid) {
+        function ubahDelete(invoice) {
             $('#modalBody').html(`<p>Are you sure you want to delete this item?</p>`);
-            $("#delete").attr("href", `/suppliers/delete/${supplierid}`);
+            $("#delete").attr("href", `/purchases/delete/${invoice}`);
         }
 
         function loadTabel() {
@@ -126,12 +126,12 @@
                 lengthMenu: [[3, 10, 100], [3, 10, 100]],
                 processing: true,
                 serverSide: true,
-                ajax: "/suppliers/data",
+                ajax: "/purchases/data",
                 columns: [
-                    { data: "supplierid", searchable: false },
-                    { data: "name" },
-                    { data: "address" },
-                    { data: "phone" },
+                    { data: "invoice" },
+                    { data: "time", searchable: false },
+                    { data: "totalsum", searchable: false },
+                    { data: "supplier", searchable: false },
                     { data: "action", searchable: false, orderable: false }
                 ]
             })

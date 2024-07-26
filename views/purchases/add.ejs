@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>POS - Suppliers</title>
+    <title>POS - Purchases</title>
 
     <!-- Custom fonts for this template-->
     <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -41,48 +41,103 @@
                         <div class="container-fluid">
 
                             <!-- Page Heading -->
-                            <div class="d-sm-flex align-items-center justify-content-between mb-0">
-                                <h1 class="h3 mb-0 text-gray-800">Suppliers</h1>
+                            <div class="d-sm-flex align-items-center justify-content-between mb-2">
+                                <h1 class="h3 mb-0 text-gray-800">Purchases</h1>
                             </div>
 
 
                             <div class="card mb-4">
                                 <div class="card-header">
-                                    <h6 class="m-0 font-weight-bold text-primary">Form Add</h6>
+                                    <h2 class="m-0 text-gray-600">Transaction</h2>
                                 </div>
                                 <div class="card-body">
-                                    <form class="user" method="post" enctype="multipart/form-data">
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label" for="inputName">Name</label>
-                                            <input required autocomplete="off" type="text" name="name"
-                                                class="form-control col-sm-10" id="inputName" placeholder="Input Name">
+                                    <div class="form-row">
+                                        <div class="form-group col">
+                                            <label>Invoice</label>
+                                            <input readonly type="text" class="form-control">
                                         </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label" for="inputAddress">Address</label>
-                                            <textarea required name="address" class="form-control col-sm-10" id="inputAddress"
-                                                placeholder="Input Address"></textarea>
+                                        <div class="form-group col">
+                                            <label>TIme</label>
+                                            <input readonly type="text" class="form-control">
                                         </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label" for="inputPhone">Phone</label>
-                                            <input required autocomplete="off" type="number" name="phone"
-                                                class="form-control col-sm-10" id="inputPhone"
-                                                placeholder="Input Phone">
+                                        <div class="form-group col">
+                                            <label>Operator</label>
+                                            <input readonly type="text" class="form-control">
                                         </div>
-                                        <button hidden id="submitAdd" type="submit"></button>
-                                    </form>
+                                    </div>
+                                    <hr>
+                                    <div class="form-row">
+                                        <div class="form-group col">
+                                            <label>Goods Barcode</label>
+                                            <select required class="form-control" id="inputUnit" name="unit"
+                                                aria-label="Default select example">
+                                            </select>
+                                        </div>
+                                        <div class="form-group col">
+                                            <label>Goods Name</label>
+                                            <input readonly type="text" class="form-control">
+                                        </div>
+                                        <div class="form-group col">
+                                            <label>Stock</label>
+                                            <input readonly type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col">
+                                            <label>Purchase Price</label>
+                                            <input type="text" class="form-control">
+                                        </div>
+                                        <div class="form-group col">
+                                            <label>Qty</label>
+                                            <input type="text" class="form-control">
+                                        </div>
+                                        <div class="form-group col">
+                                            <label>Total Price</label>
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <button id="submitAdd" class="btn btn-primary btn-icon-split" type="submit"><span
+                                            class="icon text-white-50">
+                                            <i class="fas fa-plus"></i>
+                                        </span>
+                                        <span class="text">Add</span></button>
                                 </div>
+                                <hr>
+                                <table class="table responsive nowrap" id="tabel">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">No.</th>
+                                            <th scope="col">Barcode</th>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Qty</th>
+                                            <th scope="col">Price</th>
+                                            <th scope="col">Total Price</th>
+                                        </tr>
+                                    </thead>
+                                </table>
                                 <div class="card-footer">
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label" for="inputName">Total Summary</label>
+                                        <input readonly required autocomplete="off" type="text" name="name"
+                                            class="form-control col-sm-10" id="inputName">
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label" for="inputAddress">Supplier</label>
+                                        <select required class="form-control col-sm-10" id="inputUnit" name="unit"
+                                            aria-label="Default select example">
+                                        </select>
+                                    </div>
                                     <label for="submitAdd" class="btn btn-success btn-icon-split mb-0">
                                         <span class="icon text-white-50">
-                                            <i class="fas fa-database"></i>
+                                            <i class="fas fa-plus"></i>
                                         </span>
-                                        <span class="text">Save</span>
+                                        <span class="text">Finish</span>
                                     </label>
-                                    <a href="/suppliers" class="btn btn-warning btn-icon-split">
+                                    <a href="/purchases" class="btn btn-warning btn-icon-split">
                                         <span class="icon text-white-50">
-                                            <i class="fas fa-rotate-left"></i>
+                                            <i class="fas fa-arrow-left"></i>
                                         </span>
-                                        <span class="text">back</span>
+                                        <span class="text">Back</span>
                                     </a>
                                 </div>
                             </div>
