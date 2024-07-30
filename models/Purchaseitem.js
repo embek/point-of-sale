@@ -1,6 +1,6 @@
 const { db } = require('./pg');
 
-class Purchase {
+class Purchaseitems {
 
     static async add(objectData) {
         try {
@@ -42,4 +42,4 @@ class Purchase {
     }
 }
 
-module.exports = Purchase;
+module.exports = Purchaseitems;
