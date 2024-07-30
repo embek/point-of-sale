@@ -3,11 +3,11 @@ var router = express.Router();
 const Supplier = require('../models/Supplier');
 
 router.get('/', (req, res) => {
-    res.render('suppliers/list', { operator: req.session.userid.name })
+    res.render('suppliers/list', { operator: req.session.userid })
 })
 
 router.get('/add', (req, res) => {
-    res.render('suppliers/add', { operator: req.session.userid.name })
+    res.render('suppliers/add', { operator: req.session.userid })
 })
 
 router.post('/add', async (req, res) => {
@@ -22,7 +22,7 @@ router.post('/add', async (req, res) => {
 
 router.get('/edit/:supplierid', async (req, res) => {
     const data = await Supplier.cek(req.params.supplierid);
-    res.render('suppliers/edit', { operator: req.session.userid.name, data });
+    res.render('suppliers/edit', { operator: req.session.userid, data });
 })
 
 router.post('/edit/:supplierid', async (req, res) => {

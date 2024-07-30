@@ -51,60 +51,83 @@
                                     <h2 class="m-0 text-gray-600">Transaction</h2>
                                 </div>
                                 <div class="card-body">
-                                    <div class="form-row">
-                                        <div class="form-group col">
-                                            <label>Invoice</label>
-                                            <input readonly type="text" value="<%=dataPurchase.invoice%>" name="invoice" class="form-control">
+                                    <form action="">
+                                        <div class="form-row">
+                                            <div class="form-group col">
+                                                <label>Invoice</label>
+                                                <input readonly type="text" value="<%=dataPurchase.invoice%>"
+                                                    name="invoice" class="form-control">
+                                            </div>
+                                            <div class="form-group col">
+                                                <label>Time</label>
+                                                <input readonly type="text" value="<%=dataPurchase.time%>"
+                                                    class="form-control">
+                                            </div>
+                                            <div hidden class="form-group col">
+                                                <label>Operator</label>
+                                                <select required class="form-control" id="inputOperator"
+                                                    name="operator">
+                                                    <%listUsers.forEach((element)=>{%>
+                                                        <option
+                                                            <%=element.userid==operator.userid?'selected':'disabled'%>
+                                                            value="<%=element.userid%>">
+                                                                <%=element.name%>
+                                                        </option>
+                                                        <%})%>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col">
+                                                <label>Operator</label>
+                                                <input readonly class="form-control" value="<%=operator.name%>">
+                                            </div>
                                         </div>
-                                        <div class="form-group col">
-                                            <label>Time</label>
-                                            <input readonly type="text" value="<%=dataPurchase.time%>" name="time" class="form-control">
+                                        <hr>
+                                        <div class="form-row">
+                                            <div class="form-group col">
+                                                <label>Goods Barcode</label>
+                                                <select required class="form-control" id="inputBarcode" name="barcode"
+                                                    onchange="gantiIsi()" aria-label="Default select example">
+                                                    <option disabled hidden selected>-Select Goods-</option>
+                                                    <%listGoods.forEach((element)=>{%>
+                                                        <option value="<%=element.barcode%>">
+                                                            <%=element.barcode%> - <%=element.name%>
+                                                        </option>
+                                                        <%})%>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col">
+                                                <label>Goods Name</label>
+                                                <input id="inputGoodsName" readonly type="text" class="form-control">
+                                            </div>
+                                            <div class="form-group col">
+                                                <label>Stock</label>
+                                                <input id="inputGoodsStock" readonly type="text" class="form-control">
+                                            </div>
                                         </div>
-                                        <div class="form-group col">
-                                            <label>Operator</label>
-                                            <input readonly type="text" value="<%=operator%>" name="operator" class="form-control">
+                                        <div class="form-row">
+                                            <div class="form-group col">
+                                                <label>Purchase Price</label>
+                                                <input readonly id="inputGoodsPurchasePrice" type="number"
+                                                    class="form-control">
+                                            </div>
+                                            <div class="form-group col">
+                                                <label>Qty</label>
+                                                <input min="1" placeholder="0" value="0" id="inputGoodsQuantity"
+                                                    onkeyup="gantiTotal()" type="number" name="quantity"
+                                                    class="form-control">
+                                            </div>
+                                            <div class="form-group col">
+                                                <label>Total Price</label>
+                                                <input readonly id="inputGoodsTotalPrice" type="number"
+                                                    class="form-control">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <hr>
-                                    <div class="form-row">
-                                        <div class="form-group col">
-                                            <label>Goods Barcode</label>
-                                            <select required class="form-control" id="inputGoods" name="unit" onchange="gantiIsi()"
-                                                aria-label="Default select example">
-                                                <option disabled hidden selected>-Select Goods-</option>
-                                                <%data.forEach((element)=>{%>
-                                                    <option value="<%=element.barcode%>"><%=element.barcode%> - <%=element.name%></option>
-                                                <%})%>
-                                            </select>
-                                        </div>
-                                        <div class="form-group col">
-                                            <label>Goods Name</label>
-                                            <input readonly type="text" class="form-control">
-                                        </div>
-                                        <div class="form-group col">
-                                            <label>Stock</label>
-                                            <input readonly type="text" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group col">
-                                            <label>Purchase Price</label>
-                                            <input type="text" class="form-control">
-                                        </div>
-                                        <div class="form-group col">
-                                            <label>Qty</label>
-                                            <input type="text" class="form-control">
-                                        </div>
-                                        <div class="form-group col">
-                                            <label>Total Price</label>
-                                            <input type="text" class="form-control">
-                                        </div>
-                                    </div>
-                                    <button id="submitAdd" class="btn btn-primary btn-icon-split" type="submit"><span
-                                            class="icon text-white-50">
-                                            <i class="fas fa-plus"></i>
-                                        </span>
-                                        <span class="text">Add</span></button>
+                                        <button id="submitAdd" class="btn btn-primary btn-icon-split"
+                                            type="submit"><span class="icon text-white-50">
+                                                <i class="fas fa-plus"></i>
+                                            </span>
+                                            <span class="text">Add</span></button>
+                                    </form>
                                 </div>
                                 <hr>
                                 <table class="table responsive nowrap table-striped" id="tabel">
@@ -127,8 +150,14 @@
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label" for="inputAddress">Supplier</label>
-                                        <select required class="form-control col-sm-10" id="inputSupplier" name="supplier"
-                                            aria-label="Default select example">
+                                        <select required class="form-control col-sm-10" id="inputSupplier"
+                                            name="supplier" aria-label="Default select example">
+                                            <option disabled hidden selected>-Select Supplier-</option>
+                                            <%listSuppliers.forEach((element)=>{%>
+                                                <option value="<%=element.supplierid%>">
+                                                    <%=element.name%>
+                                                </option>
+                                                <%})%>
                                         </select>
                                     </div>
                                     <label for="submitAdd" class="btn btn-success btn-icon-split mb-0">
@@ -177,7 +206,23 @@
     <!-- Custom scripts for all pages-->
     <script src="/javascripts/sb-admin-2.min.js"></script>
     <script>
-        //  data.picture?`src=images/${data.picture}`:''
+        function gantiIsi() {
+            let barcode = $('#inputBarcode').val();
+            $.ajax({
+                url: `/goods/data/${barcode}`,
+                success: (result) => {
+                    $('#inputGoodsName').val(result.name);
+                    $('#inputGoodsStock').val(result.stock);
+                    $('#inputGoodsPurchasePrice').val(result.purchaseprice);
+                    $('#inputGoodsQuantity').attr('max', result.stock);
+                    if ($('#inputGoodsQuantity').val()) gantiTotal();
+                }
+            })
+        }
+
+        function gantiTotal() {
+            $('#inputGoodsTotalPrice').val(($('#inputGoodsPurchasePrice').val()) * ($('#inputGoodsQuantity').val()))
+        }
 
     </script>
 

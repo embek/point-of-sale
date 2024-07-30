@@ -6,12 +6,12 @@ const { unlinkSync } = require('node:fs');
 const path = require('node:path');
 
 router.get('/', (req, res) => {
-    res.render('goods/list', { operator: req.session.userid.name });
+    res.render('goods/list', { operator: req.session.userid });
 })
 
 router.get('/add', async (req, res) => {
     const { data } = await Unit.list({});
-    res.render('goods/add', { operator: req.session.userid.name, units: data.map(item => item.unit) });
+    res.render('goods/add', { operator: req.session.userid, units: data.map(item => item.unit) });
 })
 
 router.post('/add', async (req, res) => {
@@ -33,7 +33,7 @@ router.get('/edit/:barcode', async (req, res) => {
     try {
         const data = await Good.cek(req.params.barcode);
         const listUnit = await Unit.list({});
-        res.render('goods/edit', { operator: req.session.userid.name, data, units: listUnit.data.map(item => item.unit) });
+        res.render('goods/edit', { operator: req.session.userid, data, units: listUnit.data.map(item => item.unit) });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: error.message });
@@ -66,6 +66,16 @@ router.get('/data', async (req, res) => {
     try {
         const response = await Good.list(req.query);
         res.status(200).json(response);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: error.message });
+    }
+})
+
+router.get('/data/:barcode', async (req, res) => {
+    try {
+        const data = await Good.cek(req.params.barcode);
+        res.status(200).json(data);
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: error.message });

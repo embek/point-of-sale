@@ -34,11 +34,13 @@ class User {
     static async list(query) {
         try {
             let sql = `SELECT * FROM users`;
-            if (query.search.value) sql += ` WHERE LOWER(name) LIKE LOWER('%${query.search.value}%') OR LOWER(email) LIKE LOWER('%${query.search.value}%')`;
-            const limit = query.length;
-            const offset = query.start;
-            const sortBy = query.columns[query.order[0].column].data;
-            const sortMode = query.order[0].dir;
+            if (query.search?.value) sql += ` WHERE LOWER(name) LIKE LOWER('%${query.search.value}%') OR LOWER(email) LIKE LOWER('%${query.search.value}%')`;
+            const limit = query.length || -1;
+            const offset = query.start || 0;
+            let sortBy = 'userid';
+            let sortMode = 'asc';
+            if (query.columns) sortBy = query.columns[query.order[0].column].data;
+            if (query.order) sortMode = query.order[0].dir;
             const total = await db.query(sql.replace('*', 'count(*) AS total'));
             sql += ` ORDER BY ${sortBy} ${sortMode}`;
             if (limit != -1) sql += ` LIMIT ${limit} OFFSET ${offset}`;
