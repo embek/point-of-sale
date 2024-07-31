@@ -57,7 +57,7 @@ class Purchaseitem {
     static async hapus(id) {
         try {
             let sql = `DELETE FROM purchaseitems WHERE id = $1`;
-            await db.query(sql, [id]);
+            const data = await db.query(sql, [id]);
         } catch (err) {
             console.log(err, 'gagal hapus purchaseitems');
         }

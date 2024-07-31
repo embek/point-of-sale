@@ -38,7 +38,7 @@ class Purchase {
         try {
             let sql = `SELECT * FROM purchases WHERE is_deleted = false`;
             const total = await db.query(sql.replace('*', 'count(*) AS total'));
-            if (query.search.value) sql += ` AND LOWER(invoice) LIKE LOWER('%${query.search.value}%')`;
+            if (query.search?.value) sql += ` AND LOWER(invoice) LIKE LOWER('%${query.search.value}%')`;
             const limit = query.length || -1;
             const offset = query.start || 0;
             let sortBy = 'invoice';
