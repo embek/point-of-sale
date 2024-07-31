@@ -13,6 +13,16 @@ class Purchase {
         }
     }
 
+    static async edit(objectData) {
+        try {
+            let params = [objectData.operator,objectData.invoice];
+            let sql = `UPDATE purchases SET operator = $1 WHERE invoice = $2`;
+            await db.query(sql, params);
+        } catch (err) {
+            console.log(err, 'gagal tambah purchases');
+        }
+    }
+
     static async cek(invoice) {
         try {
             let sql = `SELECT * FROM purchases WHERE invoice = $1`;

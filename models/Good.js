@@ -1,10 +1,11 @@
 const { db } = require('./pg');
 
 class Good {
-    static async list(query) {
+    static async list(query, filterStock = false) {
         try {
             let sql = `SELECT * FROM goods`;
             if (query.search?.value) sql += ` WHERE LOWER(name) LIKE LOWER('%${query.search.value}%')`;
+            if (filterStock) sql += ` AND stock > 0`;
             const limit = query.length || -1;
             const offset = query.start || 0;
             let sortBy = 'barcode';

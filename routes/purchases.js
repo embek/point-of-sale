@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const Purchase = require('../models/Purchase');
+const Purchaseitem = require('../models/Purchaseitem');
 const Good = require('../models/Good');
 const Supplier = require('../models/Supplier');
 const User = require('../models/User');
@@ -14,7 +15,7 @@ router.get('/add', async (req, res) => {
         await Purchase.add({ operator: req.session.userid.userid });
         const response = await Purchase.list({ length: 1 });
         const data = await Purchase.cek(response.data[0].invoice);
-        const listGoods = await Good.list({});
+        const listGoods = await Good.list({}, true);
         res.render('purchases/edit', { data, listGoods, operator: req.session.userid })
     } catch (error) {
         console.log(error);
@@ -48,6 +49,17 @@ router.get('/data', async (req, res) => {
     try {
         const response = await Purchase.list(req.query);
         res.status(200).json(response);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: error.message });
+    }
+})
+
+router.get('/data/:invoice', async (req, res) => {
+    try {
+        const list = await Purchaseitem.joinGoods(req.params.invoice);
+        const purchase = await Purchase.cek(req.params.invoice);
+        res.status(200).json({ list, purchase });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: error.message });
