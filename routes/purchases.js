@@ -10,13 +10,21 @@ router.get('/', (req, res) => {
     res.render('purchases/list', { operator: req.session.userid });
 })
 
+router.post('/', async (req, res) => {
+    try {
+        await Purchase.edit(req.body);
+        res.redirect('/purchases');
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: error.message });
+    }
+})
+
 router.get('/add', async (req, res) => {
     try {
         await Purchase.add({ operator: req.session.userid.userid });
-        const response = await Purchase.list({ length: 1 });
-        const data = await Purchase.cek(response.data[0].invoice);
-        const listGoods = await Good.list({}, true);
-        res.render('purchases/edit', { data, listGoods, operator: req.session.userid })
+        const response = await Purchase.joinSuppliers({ length: 1 });
+        res.redirect(`/purchases/edit/${response.data[0].invoice}`);
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: error.message });
@@ -47,7 +55,7 @@ router.get('/edit/:invoice', async (req, res) => {
 
 router.get('/data', async (req, res) => {
     try {
-        const response = await Purchase.list(req.query);
+        const response = await Purchase.joinSuppliers(req.query);
         res.status(200).json(response);
     } catch (error) {
         console.log(error);
@@ -65,4 +73,15 @@ router.get('/data/:invoice', async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 })
+
+router.get('/delete/:invoice', async (req, res) => {
+    try {
+        await Purchase.hapus(req.params.invoice);
+        res.redirect('/purchases');
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: error.message });
+    }
+})
+
 module.exports = router;

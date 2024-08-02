@@ -146,35 +146,54 @@
                                     <tbody id="isiTabel"></tbody>
                                 </table>
                                 <div class="card-footer">
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label" for="inputName">Total Summary</label>
-                                        <input id="inputTotalSum" readonly required autocomplete="off" type="text"
-                                            class="form-control col-sm-10">
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label" for="inputAddress">Supplier</label>
-                                        <select required class="form-control col-sm-10" id="inputSupplier"
-                                            name="supplier" aria-label="Default select example">
-                                            <option disabled hidden selected>-Select Supplier-</option>
-                                            <%listSuppliers.forEach((element)=>{%>
-                                                <option value="<%=element.supplierid%>">
-                                                    <%=element.name%>
-                                                </option>
-                                                <%})%>
-                                        </select>
-                                    </div>
-                                    <label for="submitAdd" class="btn btn-success btn-icon-split mb-0">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-plus"></i>
-                                        </span>
-                                        <span class="text">Finish</span>
-                                    </label>
-                                    <a href="/purchases" class="btn btn-warning btn-icon-split">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-arrow-left"></i>
-                                        </span>
-                                        <span class="text">Back</span>
-                                    </a>
+                                    <form action="/purchases" method="post">
+                                        <div hidden class="form-group col">
+                                            <label>Invoice</label>
+                                            <input readonly type="text" value="<%=dataPurchase.invoice%>" name="invoice"
+                                                class="form-control">
+                                        </div>
+                                        <div hidden class="form-group col">
+                                            <label>Operator</label>
+                                            <select required class="form-control" name="operator">
+                                                <%listUsers.forEach((element)=>{%>
+                                                    <option <%=element.userid==operator.userid?'selected':'disabled'%>
+                                                        value="<%=element.userid%>">
+                                                            <%=element.name%>
+                                                    </option>
+                                                    <%})%>
+                                            </select>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label">Total Summary</label>
+                                            <input id="inputTotalSum" readonly required autocomplete="off" type="text"
+                                                class="form-control col-sm-10">
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label" for="inputSupplier">Supplier</label>
+                                            <select required class="form-control col-sm-10" id="inputSupplier"
+                                                name="supplier" aria-label="Default select example">
+                                                <option disabled hidden <%=dataPurchase.supplier?'':'selected'%>>-Select Supplier-</option>
+                                                <%listSuppliers.forEach((element)=>{%>
+                                                    <option
+                                                        <%=dataPurchase.supplier?dataPurchase.supplier==element.supplierid?'selected':'':''%> value="<%=element.supplierid%>">
+                                                            <%=element.name%>
+                                                    </option>
+                                                    <%})%>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-success btn-icon-split mb-0">
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-plus"></i>
+                                            </span>
+                                            <span class="text">Finish</span>
+                                        </button>
+                                        <a href="/purchases" class="btn btn-warning btn-icon-split">
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-arrow-left"></i>
+                                            </span>
+                                            <span class="text">Back</span>
+                                        </a>
+                                    </form>
                                 </div>
                             </div>
 
