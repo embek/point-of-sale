@@ -15,6 +15,7 @@ var goodsRouter = require('./routes/goods');
 var suppliersRouter = require('./routes/suppliers');
 var purchasesRouter = require('./routes/purchases');
 var purchaseitemsRouter = require('./routes/purchaseitems');
+var customersRouter = require('./routes/customers');
 const { isLoggedIn } = require('./helpers/util');
 
 var app = express();
@@ -44,6 +45,7 @@ app.use('/goods', isLoggedIn, goodsRouter);
 app.use('/suppliers', isLoggedIn, suppliersRouter);
 app.use('/purchases', isLoggedIn, purchasesRouter);
 app.use('/purchaseitems', isLoggedIn, purchaseitemsRouter);
+app.use('/customers', isLoggedIn, customersRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
