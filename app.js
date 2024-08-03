@@ -15,6 +15,8 @@ var goodsRouter = require('./routes/goods');
 var suppliersRouter = require('./routes/suppliers');
 var purchasesRouter = require('./routes/purchases');
 var purchaseitemsRouter = require('./routes/purchaseitems');
+var salesRouter = require('./routes/sales');
+var saleitemsRouter = require('./routes/saleitems');
 var customersRouter = require('./routes/customers');
 const { isLoggedIn } = require('./helpers/util');
 
@@ -46,6 +48,8 @@ app.use('/suppliers', isLoggedIn, suppliersRouter);
 app.use('/purchases', isLoggedIn, purchasesRouter);
 app.use('/purchaseitems', isLoggedIn, purchaseitemsRouter);
 app.use('/customers', isLoggedIn, customersRouter);
+app.use('/sales', isLoggedIn, salesRouter);
+app.use('/saleitems', isLoggedIn, saleitemsRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
