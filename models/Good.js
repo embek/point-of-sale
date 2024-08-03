@@ -4,8 +4,9 @@ class Good {
     static async list(query, filterStock = false) {
         try {
             let sql = `SELECT * FROM goods`;
-            if (query.search?.value) sql += ` WHERE LOWER(name) LIKE LOWER('%${query.search.value}%')`;
-            if (filterStock) sql += ` AND stock > 0`;
+            if (query.search?.value && filterStock) sql += ` WHERE LOWER(name) LIKE LOWER('%${query.search.value}%') AND stock > 0`
+            else if (query.search?.value) sql += ` WHERE LOWER(name) LIKE LOWER('%${query.search.value}%')`
+            else if (filterStock) sql+= ` WHERE stock > 0`;
             const limit = query.length || -1;
             const offset = query.start || 0;
             let sortBy = 'barcode';

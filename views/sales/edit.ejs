@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>POS - Purchases</title>
+    <title>POS - Sales</title>
 
     <!-- Custom fonts for this template-->
     <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -42,7 +42,7 @@
 
                             <!-- Page Heading -->
                             <div class="d-sm-flex align-items-center justify-content-between mb-2">
-                                <h1 class="h3 mb-0 text-gray-800">Purchases</h1>
+                                <h1 class="h3 mb-0 text-gray-800">Sales</h1>
                             </div>
 
 
@@ -51,17 +51,16 @@
                                     <h2 class="m-0 text-gray-600">Transaction</h2>
                                 </div>
                                 <div class="card-body">
-                                    <form action="/purchaseitems/add" id="add-purchaseitem-form">
+                                    <form action="/saleitems/add" id="add-saleitem-form">
                                         <div class="form-row">
                                             <div class="form-group col">
                                                 <label>Invoice</label>
                                                 <input id="inputInvoice" readonly type="text"
-                                                    value="<%=dataPurchase.invoice%>" name="invoice"
-                                                    class="form-control">
+                                                    value="<%=dataSale.invoice%>" name="invoice" class="form-control">
                                             </div>
                                             <div class="form-group col">
                                                 <label>Time</label>
-                                                <input readonly type="text" value="<%=dataPurchase.time%>"
+                                                <input readonly type="text" value="<%=dataSale.time%>"
                                                     class="form-control">
                                             </div>
                                             <div hidden class="form-group col">
@@ -107,14 +106,14 @@
                                         </div>
                                         <div class="form-row">
                                             <div class="form-group col">
-                                                <label>Purchase Price</label>
-                                                <input readonly id="inputGoodsPurchasePrice" type="number"
+                                                <label>Selling Price</label>
+                                                <input readonly id="inputGoodsSellingPrice" type="number"
                                                     class="form-control">
                                             </div>
                                             <div class="form-group col">
                                                 <label>Qty</label>
                                                 <input min="1" placeholder="0" value="0" id="inputGoodsQuantity"
-                                                    onkeyup="gantiTotalPurchase()" type="number" name="quantity"
+                                                    onkeyup="gantiTotalSale()" type="number" name="quantity"
                                                     class="form-control">
                                             </div>
                                             <div class="form-group col">
@@ -146,10 +145,10 @@
                                     <tbody id="isiTabel"></tbody>
                                 </table>
                                 <div class="card-footer">
-                                    <form action="/purchases" method="post">
+                                    <form action="/sales" method="post">
                                         <div hidden class="form-group col">
                                             <label>Invoice</label>
-                                            <input readonly type="text" value="<%=dataPurchase.invoice%>" name="invoice"
+                                            <input readonly type="text" value="<%=dataSale.invoice%>" name="invoice"
                                                 class="form-control">
                                         </div>
                                         <div hidden class="form-group col">
@@ -169,13 +168,25 @@
                                                 class="form-control col-sm-10">
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label" for="inputSupplier">Supplier</label>
-                                            <select required class="form-control col-sm-10" id="inputSupplier"
-                                                name="supplier" aria-label="Default select example">
-                                                <option disabled hidden <%=dataPurchase.supplier?'':'selected'%>>-Select Supplier-</option>
-                                                <%listSuppliers.forEach((element)=>{%>
+                                            <label class="col-sm-2 col-form-label">Pay</label>
+                                            <input id="inputPay" onchange="gantiChange()" required autocomplete="off"
+                                                type="number" name="pay" class="form-control col-sm-10">
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label">Change</label>
+                                            <input id="inputChange" readonly required autocomplete="off" type="text"
+                                                class="form-control col-sm-10">
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label" for="inputCustomer">Customer</label>
+                                            <select required class="form-control col-sm-10" id="inputCustomer"
+                                                name="customer" aria-label="Default select example">
+                                                <option disabled hidden <%=dataSale.customer?'':'selected'%>>-Select
+                                                    Customer-</option>
+                                                <%listCustomers.forEach((element)=>{%>
                                                     <option
-                                                        <%=dataPurchase.supplier?dataPurchase.supplier==element.supplierid?'selected':'':''%> value="<%=element.supplierid%>">
+                                                        <%=dataSale.customer?dataSale.customer==element.customerid?'selected':'':''%>
+                                                        value="<%=element.customerid%>">
                                                             <%=element.name%>
                                                     </option>
                                                     <%})%>
@@ -187,7 +198,7 @@
                                             </span>
                                             <span class="text">Finish</span>
                                         </button>
-                                        <a href="/purchases" class="btn btn-warning btn-icon-split">
+                                        <a href="/sales" class="btn btn-warning btn-icon-split">
                                             <span class="icon text-white-50">
                                                 <i class="fas fa-arrow-left"></i>
                                             </span>
@@ -228,21 +239,21 @@
     <!-- Custom scripts for all pages-->
     <script src="/javascripts/sb-admin-2.min.js"></script>
     <script>
-        let invoice = "<%=dataPurchase.invoice%>";
+        let invoice = "<%=dataSale.invoice%>";
         loadAwal();
 
         function ubahDelete(id) {
             $('#modalBody').html(`<p>Are you sure you want to delete this item?</p>`);
             $("#delete").attr("data-dismiss", "modal").attr("onclick", `hapus(${id})`);
-            // .attr("href", `/purchaseitems/delete/${id}`)
+            // .attr("href", `/saleitems/delete/${id}`)
         }
 
         function hapus(id) {
             $.ajax({
-                url: `/purchaseitems/delete/${id}`,
+                url: `/saleitems/delete/${id}`,
                 success: (result) => {
                     loadTabel(result.list);
-                    loadTotalSum(result.purchase);
+                    loadTotalSum(result.sale);
                 }
             })
         }
@@ -256,10 +267,10 @@
 
         function loadAwal() {
             $.ajax({
-                url: `/purchases/data/${invoice}`,
+                url: `/sales/data/${invoice}`,
                 success: (result) => {
                     loadTabel(result.list);
-                    loadTotalSum(result.purchase);
+                    loadTotalSum(result.sale);
                 }
             })
         }
@@ -271,24 +282,25 @@
                 success: (result) => {
                     $('#inputGoodsName').val(result.name);
                     $('#inputGoodsStock').val(result.stock);
-                    $('#inputGoodsPurchasePrice').val((result.purchaseprice));
-                    if ($('#inputGoodsQuantity').val()) gantiTotalPurchase();
+                    $('#inputGoodsQuantity').attr('max', result.stock);
+                    $('#inputGoodsSellingPrice').val((result.sellingprice));
+                    if ($('#inputGoodsQuantity').val()) gantiTotalSale();
                 }
             })
         }
 
-        $('#add-purchaseitem-form').submit(e => {
+        $('#add-saleitem-form').submit(e => {
             e.preventDefault();
             let operator = $('#inputOperator').val();
             let barcode = $('#inputBarcode').val();
             let quantity = $('#inputGoodsQuantity').val();
             $.ajax({
-                url: '/purchaseitems/add',
+                url: '/saleitems/add',
                 type: "POST",
                 data: { invoice, operator, barcode, quantity },
                 success: (result) => {
                     loadTabel(result.list);
-                    loadTotalSum(result.purchase);
+                    loadTotalSum(result.sale);
                     gantiIsi();
                 }
             })
@@ -303,7 +315,7 @@
                         <td>${element.itemcode}</td>
                         <td>${element.name}</td>
                         <td>${element.quantity}</td>
-                        <td>${element.purchaseprice}</td>
+                        <td>${element.sellingprice}</td>
                         <td>${element.totalprice}</td>
                         <td>${element.action}</td>
                     </tr> `;
@@ -315,8 +327,12 @@
             $('#inputTotalSum').val(rupiah(data.totalsum));
         }
 
-        function gantiTotalPurchase() {
-            $('#inputGoodsTotalPrice').val(rupiah(($('#inputGoodsPurchasePrice').val()) * ($('#inputGoodsQuantity').val())))
+        function gantiTotalSale() {
+            $('#inputGoodsTotalPrice').val(rupiah(($('#inputGoodsSellingPrice').val()) * ($('#inputGoodsQuantity').val())))
+        }
+
+        function gantiChange() {
+            $('#inputCHange').val(rupiah($('#inputPay').val() - $('#inputTotalSum').val()));
         }
 
     </script>

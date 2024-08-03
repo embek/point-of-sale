@@ -34,7 +34,7 @@ router.get('/add', async (req, res) => {
 router.get('/edit/:invoice', async (req, res) => {
     try {
         const dataSale = await Sale.cek(req.params.invoice);
-        const dataGoods = await Good.list({});
+        const dataGoods = await Good.list({}, true);
         const listGoods = dataGoods.data.map(item => {
             return { barcode: item.barcode, name: item.name, stock: item.stock, sellingprice: item.sellingprice }
         });
