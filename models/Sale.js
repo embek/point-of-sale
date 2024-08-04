@@ -18,8 +18,8 @@ class Sale {
             let params = [];
             let sql = '';
             if (objectData.customer) {
-                params = [objectData.operator, objectData.customer, objectData.invoice];
-                sql = `UPDATE sales SET operator = $1, customer=$2 WHERE invoice = $3`;
+                params = [objectData.operator, objectData.customer, objectData.pay, objectData.invoice];
+                sql = `UPDATE sales SET operator = $1, customer=$2, pay = $3 WHERE invoice = $4`;
             } else {
                 params = [objectData.operator, objectData.invoice];
                 sql = `UPDATE sales SET operator = $1 WHERE invoice = $2`;
