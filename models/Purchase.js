@@ -84,7 +84,7 @@ class Purchase {
         try {
             let sql = `SELECT * FROM purchases LEFT JOIN suppliers ON purchases.supplier = suppliers.supplierid WHERE is_deleted = false`;
             const total = await db.query(sql.replace('*', 'count(*) AS total'));
-            if (query.search?.value) sql += ` AND LOWER(invoice) LIKE LOWER('%${query.search.value}%')`;
+            if (query.search?.value) sql += ` AND (LOWER(invoice) LIKE LOWER('%${query.search.value}%') OR LOWER(name) LIKE LOWER('%${query.search.value}%'))`;
             const limit = query.length || -1;
             const offset = query.start || 0;
             let sortBy = 'invoice';
@@ -108,6 +108,27 @@ class Purchase {
             return response;
         } catch (err) {
             console.log(err, 'gagal baca purchases');
+        }
+    }
+
+    static async total(query) {
+        try {
+            let sql = `SELECT SUM(totalsum) AS totalpurchases FROM purchases`;
+            let params = [];
+            if (query.startdate && query.enddate) {
+                sql += ` WHERE time >= $1 AND time <= $2`;
+                params.push(query.startdate, query.enddate);
+            } else if (query.startdate) {
+                sql += ` WHERE time >= $1`;
+                params.push(query.startdate);
+            } else if (query.enddate) {
+                sql += ` WHERE time >= $1`;
+                params.push(query.enddate);
+            }
+            const result = await db.query(sql, params);
+            return result.rows[0].totalpurchases;
+        } catch (err) {
+            console.log(err, 'gagal baca total purchases');
         }
     }
 

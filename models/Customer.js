@@ -34,7 +34,7 @@ class Customer {
     static async list(query) {
         try {
             let sql = `SELECT * FROM customers`;
-            if (query.search?.value) sql += ` WHERE LOWER(name) LIKE LOWER('%${query.search.value}%') OR LOWER(address) LIKE LOWER('%${query.search.value}% OR LOWER(phone) LIKE LOWER('%${query.search.value}%')')`;
+            if (query.search?.value) sql += ` WHERE LOWER(name) LIKE LOWER('%${query.search.value}%') OR LOWER(address) LIKE LOWER('%${query.search.value}%') OR LOWER(phone) LIKE LOWER('%${query.search.value}%')`;
             const limit = query.length || -1;
             const offset = query.start || 0;
             let sortBy = 'customerid';

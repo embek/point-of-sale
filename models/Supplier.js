@@ -34,7 +34,7 @@ class Supplier {
     static async list(query) {
         try {
             let sql = `SELECT * FROM suppliers`;
-            if (query.search?.value) sql += ` WHERE LOWER(name) LIKE LOWER('%${query.search.value}%') OR LOWER(address) LIKE LOWER('%${query.search.value}% OR LOWER(phone) LIKE LOWER('%${query.search.value}%')')`;
+            if (query.search?.value) sql += ` WHERE LOWER(name) LIKE LOWER('%${query.search.value}%') OR LOWER(address) LIKE LOWER('%${query.search.value}%') OR LOWER(phone) LIKE LOWER('%${query.search.value}%')`;
             const limit = query.length || -1;
             const offset = query.start || 0;
             let sortBy = 'supplierid';
@@ -44,6 +44,7 @@ class Supplier {
             const total = await db.query(sql.replace('*', 'count(*) AS total'));
             sql += ` ORDER BY ${sortBy} ${sortMode}`;
             if (limit != -1) sql += ` LIMIT ${limit} OFFSET ${offset}`;
+            console.log(sql);
             const result = await db.query(sql);
             result.rows.forEach(data => {
                 data.action = ` <a class="btn btn-success btn-circle" href="/suppliers/edit/${data.supplierid}"><i class="fas fa-info-circle"></i></a> <a class="btn btn-danger btn-circle" data-toggle="modal" data-target="#deleteModal" onclick="ubahDelete(${data.supplierid})"><i class="fas fa-trash"></i></a>`;

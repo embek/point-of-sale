@@ -54,15 +54,17 @@
                                             <h6 class="m-0 font-weight-bold text-primary">Date Settings</h6>
                                         </div>
                                         <div class="card-body">
-                                            <form class="user" method="post">
+                                            <form class="user" method="get">
                                                 <div class="form-row">
                                                     <div class="form-group col-md-6">
                                                         <label for="inputStartDate">Start Date</label>
-                                                        <input type="date" class="form-control" id="inputStartDate">
+                                                        <input type="date" class="form-control" id="inputStartDate"
+                                                            name="startdate">
                                                     </div>
                                                     <div class="form-group col-md-6">
                                                         <label for="inputEndDate">End Date</label>
-                                                        <input type="date" class="form-control" id="inputEndDate">
+                                                        <input type="date" class="form-control" id="inputEndDate"
+                                                            name="enddate">
                                                     </div>
                                                 </div>
                                                 <button hidden id="submitAdd" type="submit"></button>
@@ -298,8 +300,24 @@
     <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
+    <script src="vendor/chart.js/Chart.min.js"></script>
+
     <!-- Custom scripts for all pages-->
     <script src="javascripts/sb-admin-2.min.js"></script>
+
+    <script>
+        const earning = new Chart("myAreaChart", {
+            type: "line",
+            data: {},
+            options: {}
+        });
+
+        const revenue = new Chart("myPieChart", {
+            type: "line",
+            data: {},
+            options: {}
+        });
+    </script>
 
 </body>
 
