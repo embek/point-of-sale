@@ -313,7 +313,7 @@
     <script src="vendor/chart.js/Chart.min.js"></script>
 
     <script>
-        let dataSet = [];
+        let dataSet = [{ month: '', expense: '', revenue: '', earning: '' }];
         let query = { startdate: '', enddate: '' };
 
         $('#submitQuery').submit(e => {
@@ -349,7 +349,10 @@
             $('#totalRevenue').html(result.totalRevenue);
             $('#totalEarning').html(result.totalEarning);
             $('#totalSales').html(result.totalSales);
-            dataSet = result.data;
+            dataSet = result.data.map(item => {
+                return { month: item.month, expense: rupiah(item.expense), revenue: rupiah(item.revenue), earning: rupiah(item.earning) }
+            });
+            reloadTabel(tabel, dataSet);
             updateChart(myLineChart, result.data.map(item => item.month), result.data.map(item => item.earning));
             updateChart(myPieChart, Object.keys(result.sources), Object.values(result.sources));
         }
@@ -495,22 +498,27 @@
                 cutoutPercentage: 80,
             },
         });
-        
-        $(document).ready(function () {
-            var tabel = $('#tabel').DataTable({
-                responsive: true,
-                lengthMenu: [[3, 10, 100], [3, 10, 100]],
-                data: dataSet.map(item => {
-                    return { month: item.month, expense: rupiah(item.expense), revenue: rupiah(item.revenue), earning: rupiah(item.earning) }
-                }),
-                columns: [
-                    { data: "month" },
-                    { data: "expense", searchable: false },
-                    { data: "revenue", searchable: false },
-                    { data: "earning", searchable: false }
-                ]
-            });
 
+        var tabel = $('#tabel').DataTable({
+            responsive: true,
+            lengthMenu: [[3, 10, 100], [3, 10, 100]],
+            data: dataSet,
+            columns: [
+                { data: "month" },
+                { data: "expense", searchable: false },
+                { data: "revenue", searchable: false },
+                { data: "earning", searchable: false }
+            ]
+        });
+
+        function reloadTabel(table, newDataSets) {
+            table.clear();
+            table.rows.add(newDataSets);
+            table.draw();
+        }
+
+        $(document).ready(function () {
+            reloadTabel(tabel, dataSet);
         });
     </script>
 </body>

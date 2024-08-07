@@ -20,4 +20,15 @@ router.get('/data', async (req, res) => {
   }
 })
 
+router.get('/data/csv', async (req, res) => {
+  try {
+    const response = await Sale.joinPurchases(req.query);
+    console.log(response);
+    // res.status(200).json({ ...response });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+})
+
 module.exports = router;
