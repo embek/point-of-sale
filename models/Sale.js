@@ -113,22 +113,94 @@ class Sale {
 
     static async total(query) {
         try {
-            let sql = `SELECT SUM(totalsum) AS totalsales FROM sales`;
+            if (query.startdate == '') delete query.startdate;
+            if (query.enddate == '') delete query.enddate;
+            let sql = `SELECT COUNT(*) AS totalsales FROM sales WHERE is_deleted = false`;
             let params = [];
             if (query.startdate && query.enddate) {
-                sql += ` WHERE time >= $1 AND time <= $2`;
+                sql += ` time >= $1 AND time <= $2`;
                 params.push(query.startdate, query.enddate);
             } else if (query.startdate) {
-                sql += ` WHERE time >= $1`;
+                sql += ` time >= $1`;
                 params.push(query.startdate);
             } else if (query.enddate) {
-                sql += ` WHERE time >= $1`;
+                sql += ` time <= $1`;
                 params.push(query.enddate);
             }
             const result = await db.query(sql, params);
             return result.rows[0].totalsales;
         } catch (err) {
             console.log(err, 'gagal baca total sales');
+        }
+    }
+
+    static async joinPurchases(query) {
+        try {
+            if (query.startdate == '') delete query.startdate;
+            if (query.enddate == '') delete query.enddate;
+            let sql = `SELECT
+                            substring(sales.invoice,9,4) AS month,
+	                        SUM(purchases.totalsum) AS expense,
+	                        SUM(sales.totalsum)AS revenue,
+	                        (SUM(sales.totalsum)-SUM(purchases.totalsum)) AS earning	
+                            FROM public.sales LEFT JOIN purchases 
+                            ON substring(sales.invoice,9,4) = substring(purchases.invoice,5,4)
+                            WHERE (sales.is_deleted = false AND purchases.is_deleted = false)`;
+            // const total = await db.query(sql + ` GROUP BY substring(sales.invoice,9,4) 
+            //         ORDER BY substring(sales.invoice,9,4) ASC`);
+            let params = [];
+            if (query.startdate && query.enddate) {
+                sql += ` AND (sales.time >= $1 AND sales.time <= $2) AND (purchases.time >= $1 AND purchases.time <= $2)`;
+                params.push(query.startdate, query.enddate);
+            } else if (query.startdate) {
+                sql += ` AND sales.time >= $1 AND purchases.time >= $1`;
+                params.push(query.startdate);
+            } else if (query.enddate) {
+                sql += ` AND sales.time <= $1 AND purchases.time <= $1`;
+                params.push(query.enddate);
+            }
+            sql += ` GROUP BY substring(sales.invoice,9,4) 
+                    ORDER BY substring(sales.invoice,9,4) ASC`;
+            const result = await db.query(sql, params);
+            let totalExpense = 0;
+            let totalRevenue = 0;
+            let totalEarning = 0;
+            result.rows.forEach(value => {
+                value.month = monthly(value.month);
+                totalExpense += parseFloat(value.expense);
+                totalRevenue += parseFloat(value.revenue);
+                totalEarning += parseFloat(value.earning);
+            })
+            totalExpense = rupiah(totalExpense);
+            totalRevenue = rupiah(totalRevenue);
+            totalEarning = rupiah(totalEarning);
+            return { data: result.rows, totalEarning, totalExpense, totalRevenue };
+        } catch (err) {
+            console.log(err, 'gagal baca join sales purchases');
+        }
+    }
+
+    static async sources(query) {
+        try {
+            if (query.startdate == '') delete query.startdate;
+            if (query.enddate == '') delete query.enddate;
+            let sql = `SELECT COUNT(*) AS umum FROM sales WHERE is_deleted = false AND customer = 1`;
+            let params = [];
+            if (query.startdate && query.enddate) {
+                sql += ` time >= $1 AND time <= $2`;
+                params.push(query.startdate, query.enddate);
+            } else if (query.startdate) {
+                sql += ` time >= $1`;
+                params.push(query.startdate);
+            } else if (query.enddate) {
+                sql += ` time <= $1`;
+                params.push(query.enddate);
+            }
+            const result1 = await db.query(sql, params);
+            const result2 = await db.query(sql.replace('umum', 'customers').replace('customer = 1', 'customer <> 1'))
+            return { umum: result1.rows[0].umum, customers: result2.rows[0].customers };
+        } catch (err) {
+            console.log(err, 'gagal baca sources sales');
         }
     }
 
@@ -139,6 +211,11 @@ function rupiah(number) {
         style: "currency",
         currency: "IDR"
     }).format(number);
+}
+
+function monthly(tanggal) {
+    const nama = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    return nama[Number((tanggal.substring(2, 4))) - 1] + ' ' + (tanggal.substring(0, 2))
 }
 
 module.exports = Sale;

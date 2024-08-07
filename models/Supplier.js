@@ -34,6 +34,7 @@ class Supplier {
     static async list(query) {
         try {
             let sql = `SELECT * FROM suppliers`;
+            const total = await db.query(sql.replace('*', 'count(*) AS total'));
             if (query.search?.value) sql += ` WHERE LOWER(name) LIKE LOWER('%${query.search.value}%') OR LOWER(address) LIKE LOWER('%${query.search.value}%') OR LOWER(phone) LIKE LOWER('%${query.search.value}%')`;
             const limit = query.length || -1;
             const offset = query.start || 0;
@@ -41,7 +42,7 @@ class Supplier {
             let sortMode = 'asc';
             if (query.columns) sortBy = query.columns[query.order[0].column].data;
             if (query.order) sortMode = query.order[0].dir;
-            const total = await db.query(sql.replace('*', 'count(*) AS total'));
+            const filtered = await db.query(sql.replace('*', 'count(*) AS total'));
             sql += ` ORDER BY ${sortBy} ${sortMode}`;
             if (limit != -1) sql += ` LIMIT ${limit} OFFSET ${offset}`;
             console.log(sql);
@@ -51,7 +52,7 @@ class Supplier {
             })
             const response = {
                 "recordsTotal": total.rows[0].total,
-                "recordsFiltered": total.rows[0].total,
+                "recordsFiltered": filtered.rows[0].total,
                 "data": result.rows
             }
             return response;

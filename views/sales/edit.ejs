@@ -174,8 +174,9 @@
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Pay</label>
-                                            <input id="inputPay" onchange="gantiChange()" required autocomplete="off" value="<%=dataSale.pay%>"
-                                                type="number" name="pay" class="form-control col-sm-10">
+                                            <input id="inputPay" onchange="gantiChange()" required autocomplete="off"
+                                                value="<%=dataSale.pay%>" type="number" name="pay"
+                                                class="form-control col-sm-10">
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Change</label>
@@ -186,11 +187,9 @@
                                             <label class="col-sm-2 col-form-label" for="inputCustomer">Customer</label>
                                             <select required class="form-control col-sm-10" id="inputCustomer"
                                                 name="customer" aria-label="Default select example">
-                                                <option disabled hidden <%=dataSale.customer?'':'selected'%>>-Select
-                                                    Customer-</option>
                                                 <%listCustomers.forEach((element)=>{%>
                                                     <option
-                                                        <%=dataSale.customer?dataSale.customer==element.customerid?'selected':'':''%>
+                                                        <%=dataSale.customer?dataSale.customer==element.customerid?'selected':'':element.costumerid==1?'selected':''%>
                                                         value="<%=element.customerid%>">
                                                             <%=element.name%>
                                                     </option>

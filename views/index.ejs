@@ -100,7 +100,8 @@
                                                     <div
                                                         class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                         PURCHASES</div>
-                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                                    <div id="totalExpense"
+                                                        class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
                                                 </div>
                                                 <div class="col-auto">
                                                     <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -119,7 +120,8 @@
                                                     <div
                                                         class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                                         SALES</div>
-                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+                                                    <div id="totalRevenue"
+                                                        class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
                                                 </div>
                                                 <div class="col-auto">
                                                     <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -138,7 +140,8 @@
                                                     <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                                                         EARNINGS
                                                     </div>
-                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+                                                    <div id="totalEarning"
+                                                        class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
                                                 </div>
                                                 <div class="col-auto">
                                                     <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -157,7 +160,8 @@
                                                     <div
                                                         class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                                         TOTAL SALES</div>
-                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                                                    <div id="totalSales" class="h5 mb-0 font-weight-bold text-gray-800">
+                                                        18</div>
                                                 </div>
                                                 <div class="col-auto">
                                                     <i class="fas fa-comments fa-2x text-gray-300"></i>
@@ -230,14 +234,14 @@
                                             </div>
                                             <div class="mt-4 text-center small">
                                                 <span class="mr-2">
-                                                    <i class="fas fa-circle text-primary"></i> Direct
+                                                    <i class="fas fa-circle text-primary"></i> Umum
                                                 </span>
                                                 <span class="mr-2">
-                                                    <i class="fas fa-circle text-success"></i> Social
+                                                    <i class="fas fa-circle text-success"></i> Customers
                                                 </span>
-                                                <span class="mr-2">
+                                                <!-- <span class="mr-2">
                                                     <i class="fas fa-circle text-info"></i> Referral
-                                                </span>
+                                                </span> -->
                                             </div>
                                         </div>
                                     </div>
@@ -294,31 +298,201 @@
     </a>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/vendor/jquery/jquery.min.js"></script>
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script src="/vendor/datatables/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="/vendor/datatables/dataTables.bootstrap4.min.css">
+    <script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
     <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-    <script src="vendor/chart.js/Chart.min.js"></script>
+    <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="javascripts/sb-admin-2.min.js"></script>
+    <script src="/javascripts/sb-admin-2.min.js"></script>
+    <script src="vendor/chart.js/Chart.min.js"></script>
 
     <script>
-        const earning = new Chart("myAreaChart", {
-            type: "line",
-            data: {},
-            options: {}
+        let dataSet = [];
+
+        function rupiah(number) {
+            return new Intl.NumberFormat("id-ID", {
+                style: "currency",
+                currency: "IDR"
+            }).format(number);
+        }
+
+        loadAwal();
+
+        function load(result) {
+            $('#totalExpense').html(result.totalExpense);
+            $('#totalRevenue').html(result.totalRevenue);
+            $('#totalEarning').html(result.totalEarning);
+            $('#totalSales').html(result.totalSales);
+            dataSet = result.data;
+            updateChart(myLineChart, result.data.map(item => item.month), result.data.map(item => item.earning));
+            updateChart(myPieChart, Object.keys(result.sources), Object.values(result.sources));
+        }
+
+        function loadAwal() {
+            $.ajax({
+                url: `/dashboard/data`,
+                success: (result) => {
+                    console.log(Object.values(result.sources));
+                    load(result);
+                }
+            })
+        }
+
+        function updateChart(chart, newLabels, newDataSets) {
+            chart.data.labels = newLabels;
+            chart.data.datasets[0].data = newDataSets;
+            chart.update();
+        }
+
+        // Set new default font family and font color to mimic Bootstrap's default styling
+        Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+        Chart.defaults.global.defaultFontColor = '#858796';
+
+        // Area Chart Example
+        var chart1 = document.getElementById("myAreaChart");
+        var myLineChart = new Chart(chart1, {
+            type: 'line',
+            data: {
+                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                datasets: [{
+                    label: "Earnings",
+                    lineTension: 0.3,
+                    backgroundColor: "rgba(78, 115, 223, 0.05)",
+                    borderColor: "rgba(78, 115, 223, 1)",
+                    pointRadius: 3,
+                    pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                    pointBorderColor: "rgba(78, 115, 223, 1)",
+                    pointHoverRadius: 3,
+                    pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+                    pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                    pointHitRadius: 10,
+                    pointBorderWidth: 2,
+                    data: [0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000, 25000, 40000],
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                layout: {
+                    padding: {
+                        left: 10,
+                        right: 25,
+                        top: 25,
+                        bottom: 0
+                    }
+                },
+                scales: {
+                    xAxes: [{
+                        time: {
+                            unit: 'date'
+                        },
+                        gridLines: {
+                            display: false,
+                            drawBorder: false
+                        },
+                        ticks: {
+                            maxTicksLimit: 7
+                        }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            maxTicksLimit: 6,
+                            suggestedMin: 0,
+                            padding: 10,
+                            // Include a dollar sign in the ticks
+                            callback: function (value, index, values) {
+                                return rupiah(value);
+                            }
+                        },
+                        gridLines: {
+                            color: "rgb(234, 236, 244)",
+                            zeroLineColor: "rgb(234, 236, 244)",
+                            drawBorder: false,
+                            borderDash: [2],
+                            zeroLineBorderDash: [2]
+                        }
+                    }],
+                },
+                legend: {
+                    display: false
+                },
+                tooltips: {
+                    backgroundColor: "rgb(255,255,255)",
+                    bodyFontColor: "#858796",
+                    titleMarginBottom: 10,
+                    titleFontColor: '#6e707e',
+                    titleFontSize: 14,
+                    borderColor: '#dddfeb',
+                    borderWidth: 1,
+                    xPadding: 15,
+                    yPadding: 15,
+                    displayColors: false,
+                    intersect: false,
+                    mode: 'index',
+                    caretPadding: 10,
+                    callbacks: {
+                        label: function (tooltipItem, chart) {
+                            var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                            return datasetLabel + ' ' + rupiah(tooltipItem.yLabel);
+                        }
+                    }
+                }
+            }
         });
 
-        const revenue = new Chart("myPieChart", {
-            type: "line",
-            data: {},
-            options: {}
+        // Pie Chart Example
+        let chart2 = document.getElementById("myPieChart");
+        let myPieChart = new Chart(chart2, {
+            type: 'doughnut',
+            data: {
+                labels: ["Umum", "Customers"],
+                datasets: [{
+                    data: [55, 30],
+                    backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
+                    hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
+                    hoverBorderColor: "rgba(234, 236, 244, 1)",
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                tooltips: {
+                    backgroundColor: "rgb(255,255,255)",
+                    bodyFontColor: "#858796",
+                    borderColor: '#dddfeb',
+                    borderWidth: 1,
+                    xPadding: 15,
+                    yPadding: 15,
+                    displayColors: false,
+                    caretPadding: 10,
+                },
+                legend: {
+                    display: false
+                },
+                cutoutPercentage: 80,
+            },
+        });
+
+        $(document).ready(function () {
+            $('#tabel').DataTable({
+                responsive: true,
+                lengthMenu: [[3, 10, 100], [3, 10, 100]],
+                data: dataSet.map(item => {
+                    return { month: item.month, expense: rupiah(item.expense), revenue: rupiah(item.revenue), earning: rupiah(item.earning) }
+                }),
+                columns: [
+                    { data: "month" },
+                    { data: "expense", searchable: false },
+                    { data: "revenue", searchable: false },
+                    { data: "earning", searchable: false }
+                ]
+            });
         });
     </script>
-
 </body>
 
 </html>

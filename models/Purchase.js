@@ -111,26 +111,28 @@ class Purchase {
         }
     }
 
-    static async total(query) {
-        try {
-            let sql = `SELECT SUM(totalsum) AS totalpurchases FROM purchases`;
-            let params = [];
-            if (query.startdate && query.enddate) {
-                sql += ` WHERE time >= $1 AND time <= $2`;
-                params.push(query.startdate, query.enddate);
-            } else if (query.startdate) {
-                sql += ` WHERE time >= $1`;
-                params.push(query.startdate);
-            } else if (query.enddate) {
-                sql += ` WHERE time >= $1`;
-                params.push(query.enddate);
-            }
-            const result = await db.query(sql, params);
-            return result.rows[0].totalpurchases;
-        } catch (err) {
-            console.log(err, 'gagal baca total purchases');
-        }
-    }
+    // static async total(query) {
+    //     try {
+    //         if (query.startdate == '') delete query.startdate;
+    //         if (query.enddate == '') delete query.enddate;
+    //         let sql = `SELECT SUM(totalsum) AS totalpurchases FROM purchases WHERE is_deleted = false`;
+    //         let params = [];
+    //         if (query.startdate && query.enddate) {
+    //             sql += ` time >= $1 AND time <= $2`;
+    //             params.push(query.startdate, query.enddate);
+    //         } else if (query.startdate) {
+    //             sql += ` time >= $1`;
+    //             params.push(query.startdate);
+    //         } else if (query.enddate) {
+    //             sql += ` time <= $1`;
+    //             params.push(query.enddate);
+    //         }
+    //         const result = await db.query(sql, params);
+    //         return rupiah(result.rows[0].totalpurchases);
+    //     } catch (err) {
+    //         console.log(err, 'gagal baca total purchases');
+    //     }
+    // }
 
 }
 

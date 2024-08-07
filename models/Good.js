@@ -4,16 +4,17 @@ class Good {
     static async list(query, filterStock = false) {
         try {
             let sql = `SELECT * FROM goods`;
+            const total = await db.query(sql.replace('*', 'count(*) AS total'));
             if (query.search?.value && filterStock) sql += ` WHERE LOWER(name) LIKE LOWER('%${query.search.value}%') AND stock > 0`
             else if (query.search?.value) sql += ` WHERE LOWER(name) LIKE LOWER('%${query.search.value}%')`
-            else if (filterStock) sql+= ` WHERE stock > 0`;
+            else if (filterStock) sql += ` WHERE stock > 0`;
             const limit = query.length || -1;
             const offset = query.start || 0;
             let sortBy = 'barcode';
             let sortMode = 'desc';
             if (query.columns) sortBy = query.columns[query.order[0].column].data;
             if (query.order) sortMode = query.order[0].dir;
-            const total = await db.query(sql.replace('*', 'count(*) AS total'));
+            const filtered = await db.query(sql.replace('*', 'count(*) AS total'));
             sql += ` ORDER BY ${sortBy} ${sortMode} `;
             if (limit != -1) sql += ` LIMIT ${limit} OFFSET ${offset} `;
             const result = await db.query(sql);
@@ -23,7 +24,7 @@ class Good {
             })
             const response = {
                 "recordsTotal": total.rows[0].total,
-                "recordsFiltered": total.rows[0].total,
+                "recordsFiltered": filtered.rows[0].total,
                 "data": result.rows
             }
             return response;
