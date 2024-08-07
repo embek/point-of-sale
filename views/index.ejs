@@ -54,7 +54,7 @@
                                             <h6 class="m-0 font-weight-bold text-primary">Date Settings</h6>
                                         </div>
                                         <div class="card-body">
-                                            <form class="user" method="get">
+                                            <form id="submitQuery" class="user" method="get">
                                                 <div class="form-row">
                                                     <div class="form-group col-md-6">
                                                         <label for="inputStartDate">Start Date</label>
@@ -67,12 +67,12 @@
                                                             name="enddate">
                                                     </div>
                                                 </div>
-                                                <button hidden id="submitAdd" type="submit"></button>
-                                                <button hidden id="resetForm" type="reset"></button>
+                                                <button hidden id="submit" type="submit"></button>
+                                                <button hidden id="resetForm"></button>
                                             </form>
                                         </div>
                                         <div class="card-footer">
-                                            <label for="submitAdd" class="btn btn-success btn-icon-split mb-0">
+                                            <label for="submit" class="btn btn-success btn-icon-split mb-0">
                                                 <span class="icon text-white-50">
                                                     <i class="fas fa-check"></i>
                                                 </span>
@@ -314,6 +314,26 @@
 
     <script>
         let dataSet = [];
+        let query = { startdate: '', enddate: '' };
+
+        $('#submitQuery').submit(e => {
+            e.preventDefault();
+            query.startdate = $('#inputStartDate').val();
+            query.enddate = $('#inputEndDate').val();
+            let q = new URLSearchParams(query).toString();
+            $.ajax({
+                url: `/dashboard/data?${q}`,
+                success: (result) => load(result)
+            })
+        })
+
+        $('#resetForm').click(e => {
+            e.preventDefault();
+            $('#submitQuery').trigger('reset');
+            query.startdate = '';
+            query.enddate = '';
+            loadAwal();
+        })
 
         function rupiah(number) {
             return new Intl.NumberFormat("id-ID", {
@@ -338,7 +358,6 @@
             $.ajax({
                 url: `/dashboard/data`,
                 success: (result) => {
-                    console.log(Object.values(result.sources));
                     load(result);
                 }
             })
@@ -476,9 +495,9 @@
                 cutoutPercentage: 80,
             },
         });
-
+        
         $(document).ready(function () {
-            $('#tabel').DataTable({
+            var tabel = $('#tabel').DataTable({
                 responsive: true,
                 lengthMenu: [[3, 10, 100], [3, 10, 100]],
                 data: dataSet.map(item => {
@@ -491,6 +510,7 @@
                     { data: "earning", searchable: false }
                 ]
             });
+
         });
     </script>
 </body>

@@ -118,13 +118,13 @@ class Sale {
             let sql = `SELECT COUNT(*) AS totalsales FROM sales WHERE is_deleted = false`;
             let params = [];
             if (query.startdate && query.enddate) {
-                sql += ` time >= $1 AND time <= $2`;
+                sql += ` AND time >= $1 AND time <= $2`;
                 params.push(query.startdate, query.enddate);
             } else if (query.startdate) {
-                sql += ` time >= $1`;
+                sql += ` AND time >= $1`;
                 params.push(query.startdate);
             } else if (query.enddate) {
-                sql += ` time <= $1`;
+                sql += ` AND time <= $1`;
                 params.push(query.enddate);
             }
             const result = await db.query(sql, params);
@@ -187,17 +187,17 @@ class Sale {
             let sql = `SELECT COUNT(*) AS umum FROM sales WHERE is_deleted = false AND customer = 1`;
             let params = [];
             if (query.startdate && query.enddate) {
-                sql += ` time >= $1 AND time <= $2`;
+                sql += ` AND time >= $1 AND time <= $2`;
                 params.push(query.startdate, query.enddate);
             } else if (query.startdate) {
-                sql += ` time >= $1`;
+                sql += ` AND time >= $1`;
                 params.push(query.startdate);
             } else if (query.enddate) {
-                sql += ` time <= $1`;
+                sql += ` AND time <= $1`;
                 params.push(query.enddate);
             }
             const result1 = await db.query(sql, params);
-            const result2 = await db.query(sql.replace('umum', 'customers').replace('customer = 1', 'customer <> 1'))
+            const result2 = await db.query(sql.replace('umum', 'customers').replace('customer = 1', 'customer <> 1'), params);
             return { umum: result1.rows[0].umum, customers: result2.rows[0].customers };
         } catch (err) {
             console.log(err, 'gagal baca sources sales');
