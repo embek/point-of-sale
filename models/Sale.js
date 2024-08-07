@@ -134,7 +134,7 @@ class Sale {
         }
     }
 
-    static async joinPurchases(query) {
+    static async joinPurchases(query, forCSV = false) {
         try {
             if (query.startdate == '') delete query.startdate;
             if (query.enddate == '') delete query.enddate;
@@ -165,15 +165,18 @@ class Sale {
             let totalExpense = 0;
             let totalRevenue = 0;
             let totalEarning = 0;
+            let arr = [];
             result.rows.forEach(value => {
                 value.month = monthly(value.month);
                 totalExpense += parseFloat(value.expense);
                 totalRevenue += parseFloat(value.revenue);
                 totalEarning += parseFloat(value.earning);
+                if (forCSV) arr.push({ Month: value.month, Expense: Number(value.expense), Revenue: Number(value.revenue), Earning: Number(value.earning) });
             })
             totalExpense = rupiah(totalExpense);
             totalRevenue = rupiah(totalRevenue);
             totalEarning = rupiah(totalEarning);
+            if (forCSV) return arr;
             return { data: result.rows, totalEarning, totalExpense, totalRevenue };
         } catch (err) {
             console.log(err, 'gagal baca join sales purchases');

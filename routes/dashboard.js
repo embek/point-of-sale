@@ -1,7 +1,7 @@
 var express = require('express');
 const Sale = require('../models/Sale');
 var router = express.Router();
-
+const json2csv = require('json2csv');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -22,9 +22,10 @@ router.get('/data', async (req, res) => {
 
 router.get('/data/csv', async (req, res) => {
   try {
-    const response = await Sale.joinPurchases(req.query);
-    console.log(response);
-    // res.status(200).json({ ...response });
+    const result = await Sale.joinPurchases(req.query, true);
+    const csv = json2csv.parse(result);
+    res.header('Content-Type', 'text/csv');
+    res.attachment('report.csv').send(csv);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
