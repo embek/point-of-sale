@@ -80,7 +80,7 @@ class Sale {
         }
     }
 
-    static async joinCustomers(query) {
+    static async joinCustomers(query, operatorid) {
         try {
             let sql = `SELECT * FROM sales LEFT JOIN customers ON sales.customer = customers.customerid WHERE is_deleted = false`;
             const total = await db.query(sql.replace('*', 'count(*) AS total'));
@@ -99,6 +99,9 @@ class Sale {
                 data.totalsum = rupiah(data.totalsum);
                 data.time = moment(data.time).format('DD MMM YYYY HH:mm:ss');
                 data.action = `<a class="btn btn-success btn-circle" href="/sales/edit/${data.invoice}"><i class="fas fa-info-circle"></i></a> <a class="btn btn-danger btn-circle" data-toggle="modal" data-target="#deleteModal" onclick="ubahDelete('${(data.invoice)}')"><i class="fas fa-trash"></i></a>`;
+                if (operatorid != data.operator) {
+                    data.action = data.action.replace('btn-circle" href', 'btn-circle disabled" href').replace('btn-circle" data', 'btn-circle disabled" data');
+                }
             })
             const response = {
                 "recordsTotal": total.rows[0].total,

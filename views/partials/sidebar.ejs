@@ -28,6 +28,7 @@
     </div>
 
     <!-- Nav Item - Pages Collapse Menu -->
+    <%if (operator.role=='admin'){%>
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
             aria-controls="collapseTwo">
@@ -42,7 +43,7 @@
             </div>
         </div>
     </li>
-
+    <%}%>
     <li class="nav-item">
         <a class="nav-link" href="/suppliers">
             <i class="fas fa-fw fa-link"></i>
@@ -54,13 +55,13 @@
             <i class="fas fa-fw fa-user"></i>
             <span>Customers</span></a>
     </li>
-
+    <%if (operator.role=='admin'){%>
     <li class="nav-item">
         <a class="nav-link" href="/users">
             <i class="fas fa-fw fa-users"></i>
             <span>Users</span></a>
     </li>
-
+    <%}%>
     <!-- Divider -->
     <hr class="sidebar-divider">
 

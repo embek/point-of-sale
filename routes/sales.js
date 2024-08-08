@@ -55,7 +55,7 @@ router.get('/edit/:invoice', async (req, res) => {
 
 router.get('/data', async (req, res) => {
     try {
-        const response = await Sale.joinCustomers(req.query);
+        const response = await Sale.joinCustomers(req.query, req.session.userid.userid);
         res.status(200).json(response);
     } catch (error) {
         console.log(error);

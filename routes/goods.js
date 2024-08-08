@@ -4,17 +4,18 @@ const Good = require('../models/Good');
 const Unit = require('../models/Unit');
 const { unlinkSync } = require('node:fs');
 const path = require('node:path');
+const { isAdmin } = require('../helpers/util');
 
-router.get('/', (req, res) => {
+router.get('/', isAdmin, (req, res) => {
     res.render('goods/list', { operator: req.session.userid });
 })
 
-router.get('/add', async (req, res) => {
+router.get('/add', isAdmin, async (req, res) => {
     const { data } = await Unit.list({});
     res.render('goods/add', { operator: req.session.userid, units: data.map(item => item.unit) });
 })
 
-router.post('/add', async (req, res) => {
+router.post('/add', isAdmin, async (req, res) => {
     try {
         console.log(req.body, req.files);
         let sampleFile = req.files.picture;
@@ -29,7 +30,7 @@ router.post('/add', async (req, res) => {
     }
 })
 
-router.get('/edit/:barcode', async (req, res) => {
+router.get('/edit/:barcode', isAdmin, async (req, res) => {
     try {
         const data = await Good.cek(req.params.barcode);
         const listUnit = await Unit.list({});
@@ -40,7 +41,7 @@ router.get('/edit/:barcode', async (req, res) => {
     }
 })
 
-router.post('/edit/:barcode', async (req, res) => {
+router.post('/edit/:barcode', isAdmin, async (req, res) => {
     try {
         const data = await Good.cek(req.params.barcode);
         console.log(data);
@@ -82,7 +83,7 @@ router.get('/data/:barcode', async (req, res) => {
     }
 })
 
-router.get('/delete/:barcode', async (req, res) => {
+router.get('/delete/:barcode', isAdmin, async (req, res) => {
     try {
         const data = await Good.cek(req.params.barcode);
         const picturePath = path.join(__dirname, '..', 'public', 'images', 'goods', data.picture);

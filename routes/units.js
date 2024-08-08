@@ -1,16 +1,17 @@
 var express = require('express');
 var router = express.Router();
 const Unit = require('../models/Unit');
+const { isAdmin } = require('../helpers/util');
 
-router.get('/', (req, res) => {
+router.get('/', isAdmin, (req, res) => {
     res.render('units/list', { operator: req.session.userid });
 })
 
-router.get('/add', (req, res) => {
+router.get('/add', isAdmin, (req, res) => {
     res.render('units/add', { operator: req.session.userid });
 })
 
-router.post('/add', async (req, res) => {
+router.post('/add', isAdmin, async (req, res) => {
     try {
         await Unit.add(req.body);
         res.redirect('/units');
@@ -20,7 +21,7 @@ router.post('/add', async (req, res) => {
     }
 })
 
-router.get('/edit/:unit', async (req, res) => {
+router.get('/edit/:unit', isAdmin, async (req, res) => {
     try {
         const data = await Unit.cek(req.params.unit);
         res.render('units/edit', { operator: req.session.userid, data });
@@ -31,7 +32,7 @@ router.get('/edit/:unit', async (req, res) => {
 
 })
 
-router.post('/edit/:unit', async (req, res) => {
+router.post('/edit/:unit', isAdmin, async (req, res) => {
     try {///PK unitnya bisa ganti ,jadi pake property unit lama dalam objectData
         await Unit.edit({ lama: req.params.unit, ...req.body });
         res.redirect('/units');
@@ -51,7 +52,7 @@ router.get('/data', async (req, res) => {
     }
 })
 
-router.get('/delete/:unit', async (req, res) => {
+router.get('/delete/:unit', isAdmin, async (req, res) => {
     try {
         await Unit.hapus(req.params.unit);
         res.redirect('/units');

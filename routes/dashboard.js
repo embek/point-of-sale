@@ -4,7 +4,7 @@ var router = express.Router();
 const json2csv = require('json2csv');
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
+router.get('/', (req, res, next) => {
   res.render('index', { operator: req.session.userid });
 });
 

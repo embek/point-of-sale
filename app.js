@@ -18,7 +18,7 @@ var purchaseitemsRouter = require('./routes/purchaseitems');
 var salesRouter = require('./routes/sales');
 var saleitemsRouter = require('./routes/saleitems');
 var customersRouter = require('./routes/customers');
-const { isLoggedIn } = require('./helpers/util');
+const { isLoggedIn, isAdmin } = require('./helpers/util');
 
 var app = express();
 app.use(flash());
@@ -40,7 +40,7 @@ app.use(session({
 }))
 
 app.use('/', indexRouter);
-app.use('/dashboard', isLoggedIn, dashboardRouter);
+app.use('/dashboard', isLoggedIn, isAdmin, dashboardRouter);
 app.use('/users', isLoggedIn, usersRouter);
 app.use('/units', isLoggedIn, unitsRouter);
 app.use('/goods', isLoggedIn, goodsRouter);

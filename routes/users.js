@@ -2,18 +2,19 @@ var express = require('express');
 var router = express.Router();
 const User = require('../models/User')
 const bcrypt = require('bcrypt');
+const { isAdmin } = require('../helpers/util');
 const saltRounds = 10;
 
 /* GET users listing. */
-router.get('/', function (req, res, next) {
+router.get('/', isAdmin, function (req, res, next) {
   res.render('users/list', { operator: req.session.userid });
 });
 
-router.get('/add', (req, res) => {
+router.get('/add', isAdmin, (req, res) => {
   res.render('users/add', { operator: req.session.userid })
 })
 
-router.post('/add', async (req, res) => {
+router.post('/add', isAdmin, async (req, res) => {
   try {
     let { password } = req.body;
     let hash = bcrypt.hashSync(password, saltRounds);
@@ -25,7 +26,7 @@ router.post('/add', async (req, res) => {
   }
 })
 
-router.get('/edit/:id', async (req, res) => {
+router.get('/edit/:id', isAdmin, async (req, res) => {
   try {
     const data = await User.cek('userid', req.params.id);
     res.render('users/edit', { operator: req.session.userid, data })
@@ -35,7 +36,7 @@ router.get('/edit/:id', async (req, res) => {
   }
 })
 
-router.post('/edit/:id', async (req, res) => {
+router.post('/edit/:id', isAdmin, async (req, res) => {
   try {
     await User.edit({ userid: req.params.id, ...req.body });
     res.status(201).redirect('/users');
@@ -45,7 +46,7 @@ router.post('/edit/:id', async (req, res) => {
   }
 })
 
-router.get('/data', async (req, res) => {
+router.get('/data', isAdmin, async (req, res) => {
   try {
     const response = await User.list(req.query);
     res.status(200).json(response);
@@ -55,7 +56,7 @@ router.get('/data', async (req, res) => {
   }
 })
 
-router.get('/delete/:id', async (req, res) => {
+router.get('/delete/:id', isAdmin, async (req, res) => {
   try {
     await User.hapus(req.params.id);
     res.status(200).redirect('/users');
