@@ -97,6 +97,8 @@ class Sale {
             const result = await db.query(sql);
             result.rows.forEach(data => {
                 data.totalsum = rupiah(data.totalsum);
+                data.pay = rupiah(data.pay);
+                data.change = rupiah(data.change);
                 data.time = moment(data.time).format('DD MMM YYYY HH:mm:ss');
                 data.action = `<a class="btn btn-success btn-circle" href="/sales/edit/${data.invoice}"><i class="fas fa-info-circle"></i></a> <a class="btn btn-danger btn-circle" data-toggle="modal" data-target="#deleteModal" onclick="ubahDelete('${(data.invoice)}')"><i class="fas fa-trash"></i></a>`;
                 if (operatorid != data.operator) {

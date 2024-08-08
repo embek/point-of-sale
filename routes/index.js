@@ -6,7 +6,8 @@ const saltRounds = 10;
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
-    res.render('login', { fail: req.flash('fail') });
+    if (req.session.userid) res.redirect('/dashboard')
+    else res.render('login', { fail: req.flash('fail') });
 });
 
 router.post('/', async (req, res) => {
