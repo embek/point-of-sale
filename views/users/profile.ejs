@@ -39,13 +39,14 @@
 
                         <!-- Begin Page Content -->
                         <div class="container-fluid">
-
+                            <div <%=success.length==0?'hidden':''%> class="alert <%=success.length>0?'alert-success':''%>" role="alert">
+                                <%=success.length>0?success[0]:''%>
+                            </div>
                             <!-- Page Heading -->
                             <div class="d-sm-flex align-items-center justify-content-between mb-2">
                                 <h1 class="h3 mb-0 text-gray-800">Profile</h1>
 
                             </div>
-
 
                             <div class="card mb-4 shadow">
                                 <div class="card-header">
@@ -55,8 +56,7 @@
                                     <form class="user" method="post">
                                         <div hidden class="form-group row">
                                             <input required autocomplete="off" type="number" name="userid"
-                                                class="form-control col-sm-10" id="inputEmail" value="<%=operator.userid%>"
-                                                aria-describedby="emailHelp" placeholder="Input Email">
+                                                class="form-control col-sm-10" value="<%=operator.userid%>">
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label" for="inputEmail">Email</label>
@@ -81,8 +81,6 @@
                                     </label>
                                 </div>
                             </div>
-
-
 
                         </div>
                         <!-- /.container-fluid -->

@@ -15,9 +15,7 @@ router.get('/add', (req, res) => {
 
 router.post('/add', async (req, res) => {
   try {
-    // console.log(req.body);
     let { password } = req.body;
-    // console.log(password);
     let hash = bcrypt.hashSync(password, saltRounds);
     await User.add({ ...req.body, password: hash });
     res.status(201).redirect('/users');
@@ -69,19 +67,20 @@ router.get('/delete/:id', async (req, res) => {
 
 router.get('/profile', (req, res) => {
   try {
-    res.render('users/profile', { operator: req.session.userid });
+    res.render('users/profile', { operator: req.session.userid, success: req.flash('success'), fail: req.flash('fail') });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
   }
 })
 
-router.post('/profile',async (req, res) => {
+router.post('/profile', async (req, res) => {
   try {
-    await User.edit(req.body,true);
-    const data = await User.cek('userid',req.body.userid);
+    await User.edit(req.body, true);
+    const data = await User.cek('userid', req.body.userid);
     req.session.userid = data;
-    res.redirect('/dashboard');
+    req.flash('success', 'your profile has been updated');
+    res.redirect('/users/profile');
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
@@ -90,7 +89,32 @@ router.post('/profile',async (req, res) => {
 
 router.get('/changepassword', (req, res) => {
   try {
+    res.render('users/changepassword', { operator: req.session.userid, success: req.flash('success'), fail: req.flash('fail') });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+})
 
+router.post('/changepassword', async (req, res) => {
+  try {
+    const { userid, oldpass, newpass, retypepass } = req.body;
+    const data = await User.cek('userid', userid);
+    const verified = bcrypt.compareSync(oldpass, data.password);
+    if (verified) {
+      if (newpass !== retypepass) {
+        req.flash('fail', 'retyped password doesn\'t match');
+        res.redirect('/users/changepassword');
+      } else {
+        const hash = bcrypt.hashSync(newpass, saltRounds);
+        await User.edit({ userid, password: hash }, 'password');
+        req.flash('success', 'your password has been updated');
+        res.redirect('/users/changepassword')
+      }
+    } else {
+      req.flash('fail', 'old password is wrong');
+      res.redirect('/users/changepassword');
+    }
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
