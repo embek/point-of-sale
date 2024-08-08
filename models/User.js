@@ -11,10 +11,17 @@ class User {
         }
     }
 
-    static async edit(objectData) {
+    static async edit(objectData, forProfile = false) {
         try {
-            let params = [objectData.email, objectData.name, objectData.role, objectData.userid];
-            let sql = `UPDATE users SET email = $1, name = $2, role = $3 WHERE userid = $4 `;
+            let params = [];
+            let sql = '';
+            if (forProfile) {
+                params = [objectData.email, objectData.name, objectData.userid];
+                sql = `UPDATE users SET email = $1, name = $2 WHERE userid = $3 `;
+            } else {
+                params = [objectData.email, objectData.name, objectData.role, objectData.userid];
+                sql = `UPDATE users SET email = $1, name = $2, role = $3 WHERE userid = $4 `;
+            }
             await db.query(sql, params);
         } catch (err) {
             console.log(err, 'gagal edit users');

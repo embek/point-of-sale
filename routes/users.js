@@ -67,4 +67,34 @@ router.get('/delete/:id', async (req, res) => {
   }
 })
 
+router.get('/profile', (req, res) => {
+  try {
+    res.render('users/profile', { operator: req.session.userid });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+})
+
+router.post('/profile',async (req, res) => {
+  try {
+    await User.edit(req.body,true);
+    const data = await User.cek('userid',req.body.userid);
+    req.session.userid = data;
+    res.redirect('/dashboard');
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+})
+
+router.get('/changepassword', (req, res) => {
+  try {
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+})
+
 module.exports = router;
