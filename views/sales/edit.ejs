@@ -256,6 +256,7 @@
             $.ajax({
                 url: `/saleitems/delete/${id}`,
                 success: (result) => {
+                    socket.emit('cekstock');
                     loadTabel(result.list);
                     loadTotalSum(result.sale);
                 }
@@ -303,6 +304,7 @@
                 type: "POST",
                 data: { invoice, operator, barcode, quantity },
                 success: (result) => {
+                    socket.emit('cekstock');
                     loadTabel(result.list);
                     loadTotalSum(result.sale);
                     gantiIsi();

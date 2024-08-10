@@ -62,6 +62,16 @@ class Good {
         }
     }
 
+    static async cekStock(){
+        try {
+            let sql = `SELECT * FROM goods WHERE stock <= 5`;
+            const result = await db.query(sql);
+            return result.rows;
+        } catch (err) {
+            console.log(err, 'gagal bikin daftar goods kurang dari 5')
+        }
+    }
+
     static async cek(data) {
         try {
             let sql = `SELECT * FROM goods WHERE barcode = $1`;
