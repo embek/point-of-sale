@@ -53,6 +53,9 @@
                 let oprtr = Number("<%=operator.userid%>");
                 var socket = io();
                 socket.emit('cekstock');
+                socket.on('beli', invoice => {
+                    window.location.href = `/purchases/edit/${invoice}`;
+                })
 
                 socket.on('notif', (data) => {
 
@@ -92,9 +95,6 @@
 
                 function tambah(barcode) {
                     socket.emit('tambah', { barcode, operator: oprtr });
-                    socket.on('beli', invoice => {
-                        window.location.href = `/purchases/edit/${invoice}`;
-                    })
                 }
             </script>
             <!-- Nav Item - Alerts -->
