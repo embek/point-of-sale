@@ -10,6 +10,19 @@ router.get('/', (req, res, next) => {
 
 router.get('/data', async (req, res) => {
   try {
+    if (req.query.startdate) {
+      let st = new Date(req.query.startdate);
+      st.setMinutes(0);
+      st.setHours(0);
+      req.query.startdate = st;
+    }
+    if (req.query.enddate) {
+      let en = new Date(req.query.enddate);
+      en.setMinutes(0);
+      en.setHours(0);
+      en.setDate(en.getDate() + 1);
+      req.query.enddate = en;
+    }
     const response = await Sale.joinPurchases(req.query);
     const totalSales = await Sale.total(req.query);
     const sources = await Sale.sources(req.query);

@@ -58,8 +58,6 @@
                 })
 
                 socket.on('notif', (data) => {
-
-                    console.log('masuk socket on')
                     switch (data.length) {
                         case 0: $('#alert-num').html('');
                             break;

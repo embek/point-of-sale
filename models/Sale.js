@@ -118,8 +118,6 @@ class Sale {
 
     static async total(query) {
         try {
-            if (query.startdate == '') delete query.startdate;
-            if (query.enddate == '') delete query.enddate;
             let sql = `SELECT COUNT(*) AS totalsales FROM sales WHERE is_deleted = false`;
             let params = [];
             if (query.startdate && query.enddate) {
@@ -144,40 +142,41 @@ class Sale {
             if (query.startdate == '') delete query.startdate;
             if (query.enddate == '') delete query.enddate;
             let sql = `SELECT
-                            substring(sales.invoice,9,4) AS month,
-	                        SUM(purchases.totalsum) AS expense,
-	                        SUM(sales.totalsum)AS revenue,
-	                        (SUM(sales.totalsum)-SUM(purchases.totalsum)) AS earning	
-                            FROM public.sales LEFT JOIN purchases 
-                            ON substring(sales.invoice,9,4) = substring(purchases.invoice,5,4)
-                            WHERE (sales.is_deleted = false AND purchases.is_deleted = false)`;
+                            COALESCE(substring(pu.invoice,5,4),substring(sa.invoice,9,4)) AS month,
+	                        COALESCE(SUM(pu.totalsum),0) AS expense,
+	                        COALESCE(SUM(sa.totalsum),0) AS revenue,
+	                        (COALESCE(SUM(sa.totalsum),0)-COALESCE(SUM(pu.totalsum),0)) AS earning
+                            FROM (SELECT * FROM public.sales WHERE sales.is_deleted = false) AS sa
+                            FULL OUTER JOIN (SELECT * FROM purchases WHERE purchases.is_deleted = false) AS pu
+                            ON substring(sa.invoice,9,4) = substring(pu.invoice,5,4)`;
             // const total = await db.query(sql + ` GROUP BY substring(sales.invoice,9,4) 
             //         ORDER BY substring(sales.invoice,9,4) ASC`);
             let params = [];
             if (query.startdate && query.enddate) {
-                sql += ` AND (sales.time >= $1 AND sales.time <= $2) AND (purchases.time >= $1 AND purchases.time <= $2)`;
+                sql += ` WHERE (sa.time >= $1 AND sa.time <= $2) AND (pu.time >= $1 AND pu.time <= $2)`;
                 params.push(query.startdate, query.enddate);
             } else if (query.startdate) {
-                sql += ` AND sales.time >= $1 AND purchases.time >= $1`;
+                sql += ` WHERE sa.time >= $1 AND pu.time >= $1`;
                 params.push(query.startdate);
             } else if (query.enddate) {
-                sql += ` AND sales.time <= $1 AND purchases.time <= $1`;
+                sql += ` WHERE sa.time <= $1 AND pu.time <= $1`;
                 params.push(query.enddate);
             }
-            sql += ` GROUP BY substring(sales.invoice,9,4) 
-                    ORDER BY substring(sales.invoice,9,4) ASC`;
+            sql += ` GROUP BY month
+                    ORDER BY month ASC`;
             const result = await db.query(sql, params);
             let totalExpense = 0;
             let totalRevenue = 0;
             let totalEarning = 0;
             let arr = [];
+            console.log(result.rows);
             result.rows.forEach(value => {
-                value.month = monthly(value.month);
                 totalExpense += parseFloat(value.expense);
                 totalRevenue += parseFloat(value.revenue);
                 totalEarning += parseFloat(value.earning);
-                if (forCSV) arr.push({ Month: value.month, Expense: Number(value.expense), Revenue: Number(value.revenue), Earning: Number(value.earning) });
+                if (forCSV) arr.push({ Month: monthly(value.month), Expense: Number(value.expense), Revenue: Number(value.revenue), Earning: Number(value.earning) });
             })
+            console.log(result.rows);
             totalExpense = rupiah(totalExpense);
             totalRevenue = rupiah(totalRevenue);
             totalEarning = rupiah(totalEarning);

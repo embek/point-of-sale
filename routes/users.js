@@ -77,7 +77,7 @@ router.get('/profile', (req, res) => {
 
 router.post('/profile', async (req, res) => {
   try {
-    await User.edit(req.body, true);
+    await User.edit(req.body, 'profile');
     const data = await User.cek('userid', req.body.userid);
     req.session.userid = data;
     req.flash('success', 'your profile has been updated');

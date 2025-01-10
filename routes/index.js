@@ -14,11 +14,11 @@ router.post('/', async (req, res) => {
     try {
         const { email, password } = req.body;
         const data = await User.cek('email', email);
+        if (!data) throw Error('email not found');
         const verified = bcrypt.compareSync(password, data.password);
-        if (verified) {
-            req.session.userid = data;
-            res.redirect('/dashboard');
-        } else throw Error('wrong email or password')
+        if (!verified) throw Error('wrong email or password');
+        req.session.userid = data;
+        res.redirect('/dashboard');
     } catch (error) {
         console.log(error);
         req.flash('fail', 'wrong email or password');

@@ -18,7 +18,7 @@ class User {
             if (tipe = 'profile') {
                 params = [objectData.email, objectData.name, objectData.userid];
                 sql = `UPDATE users SET email = $1, name = $2 WHERE userid = $3 `;
-            } if (tipe = 'password') {
+            } else if (tipe = 'password') {
                 params = [objectData.password, objectData.userid];
                 sql = `UPDATE users SET password = $1 WHERE userid = $2 `;
             } else {

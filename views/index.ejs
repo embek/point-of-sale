@@ -357,8 +357,10 @@
             dataSet = result.data.map(item => {
                 return { month: item.month, expense: rupiah(item.expense), revenue: rupiah(item.revenue), earning: rupiah(item.earning) }
             });
-            reloadTabel(tabel, dataSet);
-            updateChart(myLineChart, result.data.map(item => item.month), result.data.map(item => item.earning));
+            reloadTabel(tabel, dataSet.map(item => {
+                return { ...item, month: monthly(item.month) }
+            }));
+            updateChart(myLineChart, result.data.map(item => monthly(item.month)), result.data.map(item => item.earning));
             updateChart(myPieChart, Object.keys(result.sources), Object.values(result.sources));
         }
 
@@ -416,7 +418,7 @@
                 scales: {
                     xAxes: [{
                         time: {
-                            unit: 'date'
+                            unit: 'Rupiah'
                         },
                         gridLines: {
                             display: false,
@@ -428,8 +430,8 @@
                     }],
                     yAxes: [{
                         ticks: {
+                            beginAtZero: false,
                             maxTicksLimit: 6,
-                            suggestedMin: 0,
                             padding: 10,
                             // Include a dollar sign in the ticks
                             callback: function (value, index, values) {
@@ -507,7 +509,9 @@
         var tabel = $('#tabel').DataTable({
             responsive: true,
             lengthMenu: [[3, 10, 100], [3, 10, 100]],
-            data: dataSet,
+            data: dataSet.map(item => {
+                return { ...item, month: monthly(item.month) }
+            }),
             columns: [
                 { data: "month" },
                 { data: "expense", searchable: false },
@@ -522,8 +526,15 @@
             table.draw();
         }
 
+        function monthly(tanggal) {
+            const nama = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            return nama[Number((tanggal.substring(2, 4))) - 1] + ' ' + (tanggal.substring(0, 2))
+        }
+
         $(document).ready(function () {
-            reloadTabel(tabel, dataSet);
+            reloadTabel(tabel, dataSet.map(item => {
+                return { ...item, month: monthly(item.month) }
+            }));
         });
     </script>
 </body>
