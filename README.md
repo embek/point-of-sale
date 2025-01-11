@@ -161,19 +161,6 @@ yarn db:migrate
 
 *Note: This section is currently being updated with detailed instructions.*
 
-## Testing
-
-Run the test suite:
-```bash
-npm test
-# or
-yarn test
-```
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## Support
 
 For support, please open an issue in the GitHub repository or contact the maintainers.
